@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/menuProfile"
+        android:icon="@drawable/ic_person_outline_24"
+        android:title="Perfil de usuario"></item>
+
+    <item
+        android:id="@+id/menuPersonList"
+        android:icon="@drawable/ic_groups_24"
+        android:title="Lista de personal"></item>
+
+    <item
+        android:id="@+id/menuTaskList"
+        android:icon="@drawable/ic_list_task_alt_24"
+        android:title="Lista de tareas"></item>
+
+    <item
+        android:id="@+id/menuDashboard"
+        android:icon="@drawable/ic_bar_chart_24"
+        android:title="Dashboard"></item>
+
+    <item
+        android:id="@+id/menuLogout"
+        android:icon="@drawable/ic_power_settings_24"
+        android:title="Salir"></item>
+</menu>

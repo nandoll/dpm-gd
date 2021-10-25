@@ -1,0 +1,17 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/action_save"
+        android:icon="@drawable/ic_baseline_check_circle_24"
+        android:title="Guardar cambios"
+        app:showAsAction="always"
+        />
+
+    <item
+        android:id="@+id/action_send_task"
+        android:icon="@drawable/ic_send_24"
+        android:title="Enviar reporte"
+        app:showAsAction="always"
+        />
+</menu>

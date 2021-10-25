@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.balysv.materialripple.MaterialRippleLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    style="@style/RippleStyleBlack"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        >
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/spacing_medium" />
+        <LinearLayout
+            android:id="@+id/lyt_parent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:minHeight="?attr/actionBarSize"
+            android:orientation="horizontal">
+
+            <View
+                android:layout_width="@dimen/spacing_medium"
+                android:layout_height="0dp" />
+
+
+            <RelativeLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1">
+
+                <TextView
+                    android:id="@+id/hora"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:maxLines="1"
+                    android:singleLine="true"
+                    android:text="03:15 PM"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                    android:textColor="@color/grey_90" />
+
+                <TextView
+                    android:id="@+id/medidorLabel"
+                    android:layout_width="80dp"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/hora"
+                    android:layout_marginTop="@dimen/spacing_small"
+                    android:layout_marginRight="5dp"
+                    android:maxLines="1"
+                    android:singleLine="true"
+                    android:text="Medidor:"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                    android:textColor="@color/grey_90"
+                    android:textStyle="bold" />
+                <TextView
+                    android:id="@+id/medidor"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/hora"
+                    android:layout_alignTop="@+id/medidorLabel"
+                    android:layout_toEndOf="@+id/medidorLabel"
+                    android:maxLines="1"
+                    android:singleLine="true"
+                    android:text="62251244786"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                    android:textColor="@color/grey_90" />
+
+                <TextView
+                    android:id="@+id/ubigeoLabel"
+                    android:layout_width="80dp"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/medidorLabel"
+                    android:layout_marginTop="@dimen/spacing_small"
+                    android:layout_marginRight="5dp"
+                    android:maxLines="1"
+                    android:singleLine="true"
+                    android:text="Ubigeo:"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                    android:textColor="@color/grey_90"
+                    android:textStyle="bold" />
+                <TextView
+                    android:id="@+id/ubigeo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/hora"
+                    android:layout_alignTop="@+id/ubigeoLabel"
+                    android:layout_toEndOf="@+id/ubigeoLabel"
+                    android:text="Lima - Lima - San Borja"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                    android:textColor="@color/grey_90" />
+
+                <TextView
+                    android:id="@+id/direccionLabel"
+                    android:layout_width="80dp"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/ubigeoLabel"
+                    android:layout_marginTop="@dimen/spacing_small"
+                    android:layout_marginRight="5dp"
+                    android:maxLines="1"
+                    android:singleLine="true"
+                    android:text="Dirección:"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                    android:textColor="@color/grey_90"
+                    android:textStyle="bold" />
+                <TextView
+                    android:id="@+id/direccion"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/hora"
+                    android:layout_alignTop="@+id/direccionLabel"
+                    android:layout_toEndOf="@+id/direccionLabel"
+                    android:maxLines="1"
+                    android:singleLine="true"
+                    android:text="Av Los Alamos - Mz A Lote 28"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                    android:textColor="@color/grey_90" />
+
+                <Button
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:background="@color/transparent"
+                    android:drawableTop="@android:drawable/ic_dialog_info"
+                    android:paddingTop="10dp"
+                    android:drawableTint="@color/orange_100"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:text="Pendiente"
+                    android:textColor="@color/grey_60"
+                    android:textSize="11dp" />
+
+
+
+            </RelativeLayout>
+
+            <View
+                android:layout_width="@dimen/spacing_medium"
+                android:layout_height="0dp" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/spacing_medium" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/grey_10" />
+
+
+
+    </LinearLayout>
+
+
+
+
+</com.balysv.materialripple.MaterialRippleLayout>
