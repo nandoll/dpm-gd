@@ -1,19 +1,24 @@
 package pe.com.mipredio;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.snackbar.Snackbar;
+
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,7 +53,22 @@ public class TaskAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
+        if (holder instanceof ViewHolder) {
+            TaskModel p = this.mTask.get(position);
+            ViewHolder view = (ViewHolder) holder;
+            view.textViewStatus.setText( p.getEstado().toUpperCase() );
+            if(p.getEstado().equals(Tools._STATUS_SEND)){
+                view.imageViewStatus.setImageResource(Tools._IMG_SEND);
+                view.imageViewStatus.setColorFilter( ContextCompat.getColor( view.itemView.getContext(), Tools._COLOR_SEND) );
+            }else if( p.getEstado().equals(Tools._STATUS_PENDING) ){
+                view.imageViewStatus.setImageResource(Tools._IMG_PENDING);
+                view.imageViewStatus.setColorFilter( ContextCompat.getColor( view.itemView.getContext(), Tools._COLOR_PENDING) );
+            }else if( p.getEstado().equals(Tools._STATUS_REGISTER) ){
+                view.imageViewStatus.setImageResource(Tools._IMG_REGISTER);
+                view.imageViewStatus.setColorFilter( ContextCompat.getColor( view.itemView.getContext(), Tools._COLOR_REGISTER) );
+            }
 
+        }
     }
 
     @Override
@@ -63,12 +83,17 @@ public class TaskAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         // TextView timestamp, title;
+        // Button buttonStatus;
+        ImageView imageViewStatus;
+        TextView textViewStatus;
         OnTaskListener mOnTaskListener;
 
         public ViewHolder(View itemView, OnTaskListener onTaskListener) {
             super(itemView);
             //timestamp = itemView.findViewById(R.id.note_timestamp);
             //title = itemView.findViewById(R.id.note_title);
+            textViewStatus = (TextView) itemView.findViewById(R.id.textViewStatus);
+            imageViewStatus = (ImageView) itemView.findViewById(R.id.imageViewStatus);
             mOnTaskListener = onTaskListener;
             itemView.setOnClickListener(this);
         }

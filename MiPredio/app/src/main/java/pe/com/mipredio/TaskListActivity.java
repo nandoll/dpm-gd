@@ -95,15 +95,6 @@ public class TaskListActivity extends AppCompatActivity implements NavigationVie
         recyclerView.setHasFixedSize(true);
         mAdapter = new TaskAdapter( getDataPrueba(), this);
         recyclerView.setAdapter(mAdapter);
-
-        /*
-        mAdapter.setOnItemClickListener(new TaskAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(View view, TaskModel obj, int position) {
-                Toast.makeText(TaskListActivity.this,"Hola Mundo",Toast.LENGTH_SHORT).show();
-            }
-        });
-        */
     }
 
     @Override
@@ -144,25 +135,31 @@ public class TaskListActivity extends AppCompatActivity implements NavigationVie
     private List<TaskModel> getDataPrueba(){
         // List<TaskModel> items = new ArrayList<>();
 
-        items.add(new TaskModel(0,"Calle Los Alamos 123","15/02/2021","15:11","Lima - Lima - San Isidro"));
-        items.add(new TaskModel(0,"Calle Los Alamos 123","15/02/2021","15:11","Lima - Lima - San Isidro"));
-        items.add(new TaskModel(0,"Calle Los Alamos 123","15/02/2021","15:11","Lima - Lima - San Isidro"));
-        items.add(new TaskModel(0,"Calle Los Alamos 123","15/02/2021","15:11","Lima - Lima - San Isidro"));
-        items.add(new TaskModel(0,"Calle Los Alamos 123","15/02/2021","15:11","Lima - Lima - San Isidro"));
-        items.add(new TaskModel(0,"Calle Los Alamos 123","15/02/2021","15:11","Lima - Lima - San Isidro"));
-        items.add(new TaskModel(0,"Calle Los Alamos 123","15/02/2021","15:11","Lima - Lima - San Isidro"));
-        items.add(new TaskModel(0,"Calle Los Alamos 123","15/02/2021","15:11","Lima - Lima - San Isidro"));
-        items.add(new TaskModel(0,"Calle Los Alamos 123","15/02/2021","15:11","Lima - Lima - San Isidro"));
-        items.add(new TaskModel(0,"Calle Los Alamos 123","15/02/2021","15:11","Lima - Lima - San Isidro"));
-        items.add(new TaskModel(0,"Calle Los Alamos 123","15/02/2021","15:11","Lima - Lima - San Isidro"));
-        items.add(new TaskModel(0,"Calle Los Alamos 123","15/02/2021","15:11","Lima - Lima - San Isidro"));
+        items.add(new TaskModel(0,"Calle Los Alamos 123","15/02/2021","15:11","Lima - Lima - San Isidro",Tools._STATUS_PENDING));
+        items.add(new TaskModel(0,"Calle Los Alamos 123","15/02/2021","15:11","Lima - Lima - San Isidro",Tools._STATUS_PENDING));
+        items.add(new TaskModel(0,"Calle Los Alamos 123","15/02/2021","15:11","Lima - Lima - San Isidro",Tools._STATUS_PENDING));
+        items.add(new TaskModel(0,"Calle Los Alamos 123","15/02/2021","15:11","Lima - Lima - San Isidro",Tools._STATUS_REGISTER));
+        items.add(new TaskModel(0,"Calle Los Alamos 123","15/02/2021","15:11","Lima - Lima - San Isidro",Tools._STATUS_PENDING));
+        items.add(new TaskModel(0,"Calle Los Alamos 123","15/02/2021","15:11","Lima - Lima - San Isidro",Tools._STATUS_REGISTER));
+        items.add(new TaskModel(0,"Calle Los Alamos 123","15/02/2021","15:11","Lima - Lima - San Isidro",Tools._STATUS_PENDING));
+        items.add(new TaskModel(0,"Calle Los Alamos 123","15/02/2021","15:11","Lima - Lima - San Isidro",Tools._STATUS_PENDING));
+        items.add(new TaskModel(0,"Calle Los Alamos 123","15/02/2021","15:11","Lima - Lima - San Isidro",Tools._STATUS_SEND));
+        items.add(new TaskModel(0,"Calle Los Alamos 123","15/02/2021","15:11","Lima - Lima - San Isidro",Tools._STATUS_PENDING));
+        items.add(new TaskModel(0,"Calle Los Alamos 123","15/02/2021","15:11","Lima - Lima - San Isidro",Tools._STATUS_PENDING));
+        items.add(new TaskModel(0,"Calle Los Alamos 123","15/02/2021","15:11","Lima - Lima - San Isidro",Tools._STATUS_REGISTER));
         return items;
     }
 
     @Override
     public void onTaskClick(int position) {
-        Intent intent = new Intent(this, TaskAdd.class);
-        startActivity(intent);
+
+        if(!items.get(position).getEstado().equals(Tools._STATUS_PENDING)){
+            Intent intent = new Intent(this, TaskDetailActivity.class);
+            startActivity(intent);
+        }else{
+            Intent intent = new Intent(this, TaskAdd.class);
+            startActivity(intent);
+        }
     }
 
     // Agregar iconos en el toolbar
@@ -178,8 +175,6 @@ public class TaskListActivity extends AppCompatActivity implements NavigationVie
     public boolean onOptionsItemSelected(MenuItem item) {
         switch(item.getItemId()){
             case R.id.action_send_task:
-                // Toast.makeText(this,"El reporte del día ha sido enviado",Toast.LENGTH_SHORT).show();
-                // Snackbar.make(viewMainContent,"El reporte del día ha sido enviado",Snackbar.LENGTH_LONG).show();
                 Tools.snackBarWithIconSuccess(this,viewMainContent,"El reporte del día ha sido enviado");
                 break;
         }

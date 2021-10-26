@@ -2,6 +2,8 @@ package pe.com.mipredio.model;
 
 import android.graphics.drawable.Drawable;
 
+import java.util.List;
+
 public class TaskModel {
 
     private int id;
@@ -18,12 +20,13 @@ public class TaskModel {
     private String estado; // registrado, pediente, enviado
     private String personalId;
 
-    public TaskModel(int id, String direccion, String fechaRegistro, String horaRegistro, String ubigeo) {
+    public TaskModel(int id, String direccion, String fechaRegistro, String horaRegistro, String ubigeo, String estado) {
         this.id = id;
         this.direccion = direccion;
         this.fechaRegistro = fechaRegistro;
         this.horaRegistro = horaRegistro;
         this.ubigeo = ubigeo;
+        this.estado = estado;
     }
 
     public TaskModel(){

@@ -7,7 +7,7 @@
     android:orientation="vertical"
     android:theme="@style/AppTheme.Material"
     android:id="@+id/main_content"
-    tools:context=".TaskAdd">
+    tools:context=".TaskDetailActivity">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appBarLayout"
@@ -109,7 +109,60 @@
 
                     </com.google.android.material.textfield.TextInputLayout>
 
-                                        <View
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="@dimen/spacing_medium" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Latitud y Longitud"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+                        android:textColor="@color/grey_60" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            >
+
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content" />
+
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                        <View
+                            android:layout_width="@dimen/spacing_large"
+                            android:layout_height="0dp" />
+
+
+                        <ImageButton
+                            android:layout_width="@dimen/spacing_xlarge"
+                            android:layout_height="@dimen/spacing_xlarge"
+                            android:background="?attr/selectableItemBackgroundBorderless"
+                            app:tint="@color/grey_40"
+                            app:srcCompat="@drawable/ic_location_on_24"
+                            android:id="@+id/imageButtonMap"
+                            />
+
+
+
+                        <View
+                            android:layout_width="@dimen/spacing_middle"
+                            android:layout_height="0dp" />
+
+                    </LinearLayout>
+
+                    <View
                         android:layout_width="0dp"
                         android:layout_height="@dimen/spacing_medium" />
 
@@ -217,7 +270,7 @@
                         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="Mensaje">
+                        >
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:layout_width="match_parent"
@@ -239,18 +292,6 @@
 
         </androidx.core.widget.NestedScrollView>
 
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/spacing_smlarge"
-            android:clickable="true"
-            app:backgroundTint="@color/cyan_700"
-            app:fabSize="normal"
-            app:layout_anchor="@id/lyt_form"
-            app:layout_anchorGravity="top|end|right"
-            app:rippleColor="@android:color/white"
-            app:srcCompat="@drawable/ic_photo_camera_24"
-            app:tint="@android:color/white" />
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </LinearLayout>

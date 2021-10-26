@@ -3,6 +3,7 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Ejercicios/UPC/proyecto/dpm-gd/MiPredio/app/src/main/res/drawable-v24/swipe_up_handle.xml" value="0.2203125" />
         <entry key="..\:/Ejercicios/UPC/proyecto/dpm-gd/MiPredio/app/src/main/res/drawable/bg_blue_light.xml" value="0.2203125" />
         <entry key="..\:/Ejercicios/UPC/proyecto/dpm-gd/MiPredio/app/src/main/res/drawable/bg_light_green_2_blue.xml" value="0.2203125" />
         <entry key="..\:/Ejercicios/UPC/proyecto/dpm-gd/MiPredio/app/src/main/res/drawable/btn_rounded_blue.xml" value="0.2203125" />
@@ -10,12 +11,19 @@
         <entry key="..\:/Ejercicios/UPC/proyecto/dpm-gd/MiPredio/app/src/main/res/drawable/btn_rounded_green_300.xml" value="0.2203125" />
         <entry key="..\:/Ejercicios/UPC/proyecto/dpm-gd/MiPredio/app/src/main/res/drawable/circle.xml" value="0.2203125" />
         <entry key="..\:/Ejercicios/UPC/proyecto/dpm-gd/MiPredio/app/src/main/res/drawable/ic_arrow_right.xml" value="0.2203125" />
+        <entry key="..\:/Ejercicios/UPC/proyecto/dpm-gd/MiPredio/app/src/main/res/drawable/ic_done_24.xml" value="0.2203125" />
+        <entry key="..\:/Ejercicios/UPC/proyecto/dpm-gd/MiPredio/app/src/main/res/drawable/ic_done_all_24.xml" value="0.2203125" />
+        <entry key="..\:/Ejercicios/UPC/proyecto/dpm-gd/MiPredio/app/src/main/res/drawable/ic_send_24.xml" value="0.2203125" />
         <entry key="..\:/Ejercicios/UPC/proyecto/dpm-gd/MiPredio/app/src/main/res/drawable/sidebar_header_layout.xml" value="0.2203125" />
         <entry key="..\:/Ejercicios/UPC/proyecto/dpm-gd/MiPredio/app/src/main/res/layout/activity_login.xml" value="0.33" />
         <entry key="..\:/Ejercicios/UPC/proyecto/dpm-gd/MiPredio/app/src/main/res/layout/activity_main.xml" value="0.21958925750394945" />
         <entry key="..\:/Ejercicios/UPC/proyecto/dpm-gd/MiPredio/app/src/main/res/layout/activity_task_add.xml" value="0.33" />
+        <entry key="..\:/Ejercicios/UPC/proyecto/dpm-gd/MiPredio/app/src/main/res/layout/activity_task_detail.xml" value="0.36465116279069765" />
         <entry key="..\:/Ejercicios/UPC/proyecto/dpm-gd/MiPredio/app/src/main/res/layout/activity_task_list.xml" value="0.25" />
+        <entry key="..\:/Ejercicios/UPC/proyecto/dpm-gd/MiPredio/app/src/main/res/layout/activity_task_map.xml" value="0.20416666666666666" />
+        <entry key="..\:/Ejercicios/UPC/proyecto/dpm-gd/MiPredio/app/src/main/res/layout/dialog_map_detail.xml" value="0.20416666666666666" />
         <entry key="..\:/Ejercicios/UPC/proyecto/dpm-gd/MiPredio/app/src/main/res/layout/item_task_list.xml" value="0.5" />
+        <entry key="..\:/Ejercicios/UPC/proyecto/dpm-gd/MiPredio/app/src/main/res/layout/sheet_map.xml" value="0.33" />
         <entry key="..\:/Ejercicios/UPC/proyecto/dpm-gd/MiPredio/app/src/main/res/layout/sidebar_header.xml" value="0.25" />
         <entry key="..\:/Ejercicios/UPC/proyecto/dpm-gd/MiPredio/app/src/main/res/layout/snackbar_icon_text.xml" value="0.1" />
         <entry key="..\:/Ejercicios/UPC/proyecto/dpm-gd/MiPredio/app/src/main/res/menu/menu_sidebar.xml" value="0.25" />
