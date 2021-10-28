@@ -34,6 +34,7 @@ public class TaskDetailActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(v.getContext(), TaskMapActivity.class);
+                intent.putExtra("taskId","999"); // Pasar el ID a la activity para mostrar solo 1 marcador de la Tarea
                 startActivity(intent);
             }
         });

@@ -49,8 +49,12 @@ public class TaskAdd extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_task_toolbar, menu);
-        MenuItem item = menu.findItem(R.id.action_send_task);
-        item.setVisible(false);
+        MenuItem itemSend = menu.findItem(R.id.action_send_task);
+        itemSend.setVisible(false);
+
+        MenuItem itemMap = menu.findItem(R.id.action_map);
+        itemMap.setVisible(false);
+
         return true;
     }
 

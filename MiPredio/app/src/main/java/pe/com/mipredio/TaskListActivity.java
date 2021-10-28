@@ -1,6 +1,7 @@
 package pe.com.mipredio;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
@@ -20,8 +21,10 @@ import android.widget.Toast;
 
 import com.google.android.material.navigation.NavigationView;
 import com.vivekkaushik.datepicker.DatePickerTimeline;
+import com.vivekkaushik.datepicker.OnDateSelectedListener;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import pe.com.mipredio.model.TaskModel;
@@ -47,6 +50,7 @@ public class TaskListActivity extends AppCompatActivity implements NavigationVie
         setContentView(R.layout.activity_task_list);
         viewMainContent = findViewById(R.id.main_content);
 
+
         initToolbar();
         initNavigationMenu();
         initCalendar();
@@ -54,8 +58,32 @@ public class TaskListActivity extends AppCompatActivity implements NavigationVie
     }
 
     private void initCalendar() {
+
+        Calendar c = Calendar.getInstance();
+        int mYear = c.get(Calendar.YEAR);
+        int mMonth = c.get(Calendar.MONTH);
+        int mDay = c.get(Calendar.DAY_OF_MONTH);
+
         DatePickerTimeline datePickerTimeline = findViewById(R.id.datePickerTimeline);
-        // datePickerTimeline.setInitialDate(2019, 3, 21);
+        datePickerTimeline.setInitialDate(mYear,mMonth,mDay);
+        datePickerTimeline.setPressed(true);
+        datePickerTimeline.setActiveDate(c);
+
+        datePickerTimeline.setOnDateSelectedListener(new OnDateSelectedListener() {
+            @Override
+            public void onDateSelected(int year, int month, int day, int dayOfWeek) {
+                //Tools.snackBarWithIconSuccess(TaskListActivity.this,viewMainContent,"Selected");
+            }
+
+            @Override
+            public void onDisabledDateSelected(int year, int month, int day, int dayOfWeek, boolean isDisabled) {
+                //Tools.snackBarWithIconSuccess(TaskListActivity.this,viewMainContent,"DisableSelected");
+            }
+        });
+
+        datePickerTimeline.callOnClick();
+
+
     }
 
     private void initToolbar() {
@@ -65,9 +93,6 @@ public class TaskListActivity extends AppCompatActivity implements NavigationVie
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setHomeButtonEnabled(true);
         actionBar.setTitle("Lista de Tarea");
-
-        //Tools.setSystemBarColor(this, R.color.cyan_400);
-        // Tools.setSystemBarLight(this);
 
         Tools.setSystemBarColor(this, R.color.cyan_50);
         Tools.setSystemBarLight(this);
@@ -113,7 +138,8 @@ public class TaskListActivity extends AppCompatActivity implements NavigationVie
                 Toast.makeText(this, "Perfil de usuario", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.menuPersonList:
-                Toast.makeText(this, "Lista de personal", Toast.LENGTH_SHORT).show();
+                Intent intentPerson = new Intent(TaskListActivity.this, TechnicalProfessionalListActivity.class);
+                startActivity(intentPerson);
                 break;
             case R.id.menuTaskList:
                 // Toast.makeText(this, "Lista de tareas", Toast.LENGTH_SHORT).show();
@@ -177,15 +203,12 @@ public class TaskListActivity extends AppCompatActivity implements NavigationVie
             case R.id.action_send_task:
                 Tools.snackBarWithIconSuccess(this,viewMainContent,"El reporte del día ha sido enviado");
                 break;
+            case R.id.action_map:
+                Intent intentMap = new Intent(this,TaskMapActivity.class);
+                intentMap.putExtra("taskDate","22/10/2021");
+                startActivity(intentMap);
+                break;
         }
-
-        /*
-        if (item.getItemId() == android.R.id.home) {
-            finish();
-        } else {
-            Toast.makeText(getApplicationContext(), item.getTitle(), Toast.LENGTH_SHORT).show();
-        }
-        */
         return super.onOptionsItemSelected(item);
     }
 }

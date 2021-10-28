@@ -79,12 +79,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 Toast.makeText(this,"Perfil de usuario",Toast.LENGTH_SHORT).show();
                 break;
             case R.id.menuPersonList:
-                Toast.makeText(this,"Lista de personal",Toast.LENGTH_SHORT).show();
+                Intent intentPerson = new Intent(MainActivity.this, TechnicalProfessionalListActivity.class);
+                startActivity(intentPerson);
                 break;
             case R.id.menuTaskList:
-                Toast.makeText(this,"Lista de tareas",Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(MainActivity.this,TaskListActivity.class);
-                startActivity(intent);
+                Intent intentTask = new Intent(MainActivity.this,TaskListActivity.class);
+                startActivity(intentTask);
                 break;
             case R.id.menuDashboard:
                 Toast.makeText(this,"Dashabord",Toast.LENGTH_SHORT).show();

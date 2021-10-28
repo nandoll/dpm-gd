@@ -32,12 +32,6 @@ public class TaskAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private List<TaskModel> mTask = new ArrayList<>();
     private OnTaskListener mOnTaskListener;
 
-    /*
-    public TaskAdapter(ArrayList<TaskModel> mNotes, OnTaskListener onTaskListener) {
-        this.mTask = mNotes;
-        this.mOnTaskListener = onTaskListener;
-    }
-     */
     public TaskAdapter(List<TaskModel> mNotes, OnTaskListener onTaskListener) {
         this.mTask = mNotes;
         this.mOnTaskListener = onTaskListener;

@@ -19,13 +19,16 @@
         <entry key="..\:/Ejercicios/UPC/proyecto/dpm-gd/MiPredio/app/src/main/res/layout/activity_main.xml" value="0.21958925750394945" />
         <entry key="..\:/Ejercicios/UPC/proyecto/dpm-gd/MiPredio/app/src/main/res/layout/activity_task_add.xml" value="0.33" />
         <entry key="..\:/Ejercicios/UPC/proyecto/dpm-gd/MiPredio/app/src/main/res/layout/activity_task_detail.xml" value="0.36465116279069765" />
-        <entry key="..\:/Ejercicios/UPC/proyecto/dpm-gd/MiPredio/app/src/main/res/layout/activity_task_list.xml" value="0.25" />
+        <entry key="..\:/Ejercicios/UPC/proyecto/dpm-gd/MiPredio/app/src/main/res/layout/activity_task_list.xml" value="0.20816326530612245" />
         <entry key="..\:/Ejercicios/UPC/proyecto/dpm-gd/MiPredio/app/src/main/res/layout/activity_task_map.xml" value="0.20416666666666666" />
+        <entry key="..\:/Ejercicios/UPC/proyecto/dpm-gd/MiPredio/app/src/main/res/layout/activity_technical_professional_list.xml" value="0.33" />
         <entry key="..\:/Ejercicios/UPC/proyecto/dpm-gd/MiPredio/app/src/main/res/layout/dialog_map_detail.xml" value="0.20416666666666666" />
         <entry key="..\:/Ejercicios/UPC/proyecto/dpm-gd/MiPredio/app/src/main/res/layout/item_task_list.xml" value="0.5" />
+        <entry key="..\:/Ejercicios/UPC/proyecto/dpm-gd/MiPredio/app/src/main/res/layout/item_technical_professional_list.xml" value="0.5" />
         <entry key="..\:/Ejercicios/UPC/proyecto/dpm-gd/MiPredio/app/src/main/res/layout/sheet_map.xml" value="0.33" />
         <entry key="..\:/Ejercicios/UPC/proyecto/dpm-gd/MiPredio/app/src/main/res/layout/sidebar_header.xml" value="0.25" />
         <entry key="..\:/Ejercicios/UPC/proyecto/dpm-gd/MiPredio/app/src/main/res/layout/snackbar_icon_text.xml" value="0.1" />
+        <entry key="..\:/Ejercicios/UPC/proyecto/dpm-gd/MiPredio/app/src/main/res/layout/view_map_marker.xml" value="1.1" />
         <entry key="..\:/Ejercicios/UPC/proyecto/dpm-gd/MiPredio/app/src/main/res/menu/menu_sidebar.xml" value="0.25" />
         <entry key="..\:/Ejercicios/UPC/proyecto/dpm-gd/MiPredio/app/src/main/res/menu/menu_task_toolbar.xml" value="0.22" />
       </map>

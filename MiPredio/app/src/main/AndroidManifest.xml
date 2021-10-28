@@ -16,6 +16,9 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
         <activity
+            android:name=".TechnicalProfessionalListActivity"
+            android:exported="true" />
+        <activity
             android:name=".TaskMapActivity"
             android:exported="true" />
         <activity
