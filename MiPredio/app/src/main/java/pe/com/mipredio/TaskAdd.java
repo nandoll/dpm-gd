@@ -55,6 +55,9 @@ public class TaskAdd extends AppCompatActivity {
         MenuItem itemMap = menu.findItem(R.id.action_map);
         itemMap.setVisible(false);
 
+        MenuItem itemDate = menu.findItem(R.id.action_calendar);
+        itemDate.setVisible(false);
+
         return true;
     }
 

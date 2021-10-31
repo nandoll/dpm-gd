@@ -22,6 +22,9 @@ import com.bumptech.glide.request.target.BitmapImageViewTarget;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.material.snackbar.Snackbar;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import pe.com.mipredio.R;
 
 public class Tools {
@@ -111,5 +114,16 @@ public class Tools {
         googleMap.getUiSettings().setMapToolbarEnabled(true);
 
         return googleMap;
+    }
+
+
+    // Date
+    public static String getFormatDate(Long dateTime) {
+        SimpleDateFormat newFormat = new SimpleDateFormat("MMMM dd, yyyy");
+        return newFormat.format(new Date(dateTime));
+    }
+    public static String getDateFullDayName(Long dateTime) {
+        SimpleDateFormat newFormat = new SimpleDateFormat("EEEE");
+        return newFormat.format(new Date(dateTime));
     }
 }

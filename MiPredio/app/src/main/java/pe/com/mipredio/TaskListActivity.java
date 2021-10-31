@@ -11,17 +11,18 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.material.snackbar.Snackbar;
+import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.DatePicker;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
-import com.vivekkaushik.datepicker.DatePickerTimeline;
-import com.vivekkaushik.datepicker.OnDateSelectedListener;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -36,54 +37,97 @@ public class TaskListActivity extends AppCompatActivity implements NavigationVie
     private ActionBar actionBar;
     private DrawerLayout drawer;
     private NavigationView nav_view;
-
-
     private RecyclerView recyclerView;
     private TaskAdapter mAdapter;
-
     private List<TaskModel> items = new ArrayList<>();
-
     private View viewMainContent;
+    private FloatingActionButton floatingActionButtonAdd;
+    private Integer _day;
+    private Integer _month;
+    private Integer _year;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_task_list);
         viewMainContent = findViewById(R.id.main_content);
-
+        floatingActionButtonAdd = (FloatingActionButton) findViewById(R.id.btnaddTask);
 
         initToolbar();
         initNavigationMenu();
-        initCalendar();
         initTaskList();
-    }
 
-    private void initCalendar() {
-
-        Calendar c = Calendar.getInstance();
-        int mYear = c.get(Calendar.YEAR);
-        int mMonth = c.get(Calendar.MONTH);
-        int mDay = c.get(Calendar.DAY_OF_MONTH);
-
-        DatePickerTimeline datePickerTimeline = findViewById(R.id.datePickerTimeline);
-        datePickerTimeline.setInitialDate(mYear,mMonth,mDay);
-        datePickerTimeline.setPressed(true);
-        datePickerTimeline.setActiveDate(c);
-
-        datePickerTimeline.setOnDateSelectedListener(new OnDateSelectedListener() {
+        floatingActionButtonAdd.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onDateSelected(int year, int month, int day, int dayOfWeek) {
-                //Tools.snackBarWithIconSuccess(TaskListActivity.this,viewMainContent,"Selected");
-            }
-
-            @Override
-            public void onDisabledDateSelected(int year, int month, int day, int dayOfWeek, boolean isDisabled) {
-                //Tools.snackBarWithIconSuccess(TaskListActivity.this,viewMainContent,"DisableSelected");
+            public void onClick(View v) {
+                Intent intent = new Intent(TaskListActivity.this, TaskAdd.class);
+                startActivity(intent);
             }
         });
+    }
 
-        datePickerTimeline.callOnClick();
 
+    private void initCalendar() {
+        if (_day == null || _month == null || _year == null) {
+            Calendar cur_calender = Calendar.getInstance();
+            _day = cur_calender.get(Calendar.DAY_OF_MONTH);
+            _month = cur_calender.get(Calendar.MONTH);
+            _year = cur_calender.get(Calendar.YEAR);
+        }
 
+        Tools.snackBarWithIconSuccess(TaskListActivity.this, viewMainContent, "Año:" + _year + "Mes: " + _month + " Dia: " + _day);
+        DatePickerDialog recogerFecha = new DatePickerDialog(TaskListActivity.this, R.style.DatePickerThemeLight, new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                /*
+                final int mesActual = month + 1;
+                String diaFormateado = (dayOfMonth < 10) ? CERO + String.valueOf(dayOfMonth) : String.valueOf(dayOfMonth);
+                String mesFormateado = (mesActual < 10) ? CERO + String.valueOf(mesActual) : String.valueOf(mesActual);
+                txtFecha.setText(diaFormateado + BARRA + mesFormateado + BARRA + year);
+                */
+
+                Calendar calendar = Calendar.getInstance();
+                calendar.set(Calendar.YEAR, year);
+                calendar.set(Calendar.MONTH, month);
+                calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                long date_ship_millis = calendar.getTimeInMillis();
+                ((TextView) findViewById(R.id.textDateSelected)).setText(Tools.getFormatDate(date_ship_millis));
+                ((TextView) findViewById(R.id.textDateSelectedDay)).setText(Tools.getDateFullDayName(date_ship_millis));
+
+                _year = year;
+                _month = month;
+                _day = dayOfMonth;
+                Toast.makeText(TaskListActivity.this, "_year ...." + _year + " ... _month " + _month + " ... _day " + _day, Toast.LENGTH_LONG).show();
+            }
+        }, _year, _month, _day);
+        recogerFecha.show();
+
+        /*com.wdullaer.materialdatetimepicker.date.DatePickerDialog datePicker = com.wdullaer.materialdatetimepicker.date.DatePickerDialog.newInstance(
+                new com.wdullaer.materialdatetimepicker.date.DatePickerDialog.OnDateSetListener() {
+                    @Override
+                    public void onDateSet(DatePickerDialog view, int year, int monthOfYear, int dayOfMonth) {
+                        Calendar calendar = Calendar.getInstance();
+                        calendar.set(Calendar.YEAR, year);
+                        calendar.set(Calendar.MONTH, monthOfYear);
+                        calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                        long date_ship_millis = calendar.getTimeInMillis();
+                        ((TextView) findViewById(R.id.textDateSelected)).setText( Tools.getFormatDate(date_ship_millis) );
+                        ((TextView) findViewById(R.id.textDateSelectedDay)).setText( Tools.getDateFullDayName(date_ship_millis) );
+
+                        _year = year;
+                        _month = monthOfYear;
+                        _day = dayOfMonth;
+
+                        Tools.snackBarWithIconSuccess(TaskListActivity.this, viewMainContent, "Año:" + _year + "Mes: " + _month + " Dia: " + _day );
+
+                    }
+                },
+                cur_calender.get(_year),
+                cur_calender.get(_month),
+                cur_calender.get(_day)
+        );
+        datePicker.setThemeDark(false);
+        datePicker.setAccentColor(getResources().getColor(R.color.colorPrimary));
+        datePicker.show(getFragmentManager(), "Datepickerdialog");*/
     }
 
     private void initToolbar() {
@@ -114,11 +158,11 @@ public class TaskListActivity extends AppCompatActivity implements NavigationVie
         nav_view.setNavigationItemSelectedListener(this);
     }
 
-    private  void initTaskList(){
+    private void initTaskList() {
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setHasFixedSize(true);
-        mAdapter = new TaskAdapter( getDataPrueba(), this);
+        mAdapter = new TaskAdapter(getDataPrueba(), this);
         recyclerView.setAdapter(mAdapter);
     }
 
@@ -134,9 +178,7 @@ public class TaskListActivity extends AppCompatActivity implements NavigationVie
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.menuProfile:
-                Toast.makeText(this, "Perfil de usuario", Toast.LENGTH_SHORT).show();
-                break;
+
             case R.id.menuPersonList:
                 Intent intentPerson = new Intent(TaskListActivity.this, TechnicalProfessionalListActivity.class);
                 startActivity(intentPerson);
@@ -147,7 +189,9 @@ public class TaskListActivity extends AppCompatActivity implements NavigationVie
                 startActivity(intent);
                 break;
             case R.id.menuDashboard:
-                Toast.makeText(this, "Dashabord", Toast.LENGTH_SHORT).show();
+                // Toast.makeText(this, "Dashabord", Toast.LENGTH_SHORT).show();
+                Intent intentChart = new Intent(TaskListActivity.this, ChartActivity.class);
+                startActivity(intentChart);
                 break;
             case R.id.menuLogout:
                 Toast.makeText(this, "Salir App", Toast.LENGTH_SHORT).show();
@@ -158,31 +202,31 @@ public class TaskListActivity extends AppCompatActivity implements NavigationVie
     }
 
 
-    private List<TaskModel> getDataPrueba(){
+    private List<TaskModel> getDataPrueba() {
         // List<TaskModel> items = new ArrayList<>();
 
-        items.add(new TaskModel(0,"Calle Los Alamos 123","15/02/2021","15:11","Lima - Lima - San Isidro",Tools._STATUS_PENDING));
-        items.add(new TaskModel(0,"Calle Los Alamos 123","15/02/2021","15:11","Lima - Lima - San Isidro",Tools._STATUS_PENDING));
-        items.add(new TaskModel(0,"Calle Los Alamos 123","15/02/2021","15:11","Lima - Lima - San Isidro",Tools._STATUS_PENDING));
-        items.add(new TaskModel(0,"Calle Los Alamos 123","15/02/2021","15:11","Lima - Lima - San Isidro",Tools._STATUS_REGISTER));
-        items.add(new TaskModel(0,"Calle Los Alamos 123","15/02/2021","15:11","Lima - Lima - San Isidro",Tools._STATUS_PENDING));
-        items.add(new TaskModel(0,"Calle Los Alamos 123","15/02/2021","15:11","Lima - Lima - San Isidro",Tools._STATUS_REGISTER));
-        items.add(new TaskModel(0,"Calle Los Alamos 123","15/02/2021","15:11","Lima - Lima - San Isidro",Tools._STATUS_PENDING));
-        items.add(new TaskModel(0,"Calle Los Alamos 123","15/02/2021","15:11","Lima - Lima - San Isidro",Tools._STATUS_PENDING));
-        items.add(new TaskModel(0,"Calle Los Alamos 123","15/02/2021","15:11","Lima - Lima - San Isidro",Tools._STATUS_SEND));
-        items.add(new TaskModel(0,"Calle Los Alamos 123","15/02/2021","15:11","Lima - Lima - San Isidro",Tools._STATUS_PENDING));
-        items.add(new TaskModel(0,"Calle Los Alamos 123","15/02/2021","15:11","Lima - Lima - San Isidro",Tools._STATUS_PENDING));
-        items.add(new TaskModel(0,"Calle Los Alamos 123","15/02/2021","15:11","Lima - Lima - San Isidro",Tools._STATUS_REGISTER));
+        items.add(new TaskModel(0, "Calle Los Alamos 123", "15/02/2021", "15:11", "Lima - Lima - San Isidro", Tools._STATUS_PENDING));
+        items.add(new TaskModel(0, "Calle Los Alamos 123", "15/02/2021", "15:11", "Lima - Lima - San Isidro", Tools._STATUS_PENDING));
+        items.add(new TaskModel(0, "Calle Los Alamos 123", "15/02/2021", "15:11", "Lima - Lima - San Isidro", Tools._STATUS_PENDING));
+        items.add(new TaskModel(0, "Calle Los Alamos 123", "15/02/2021", "15:11", "Lima - Lima - San Isidro", Tools._STATUS_REGISTER));
+        items.add(new TaskModel(0, "Calle Los Alamos 123", "15/02/2021", "15:11", "Lima - Lima - San Isidro", Tools._STATUS_PENDING));
+        items.add(new TaskModel(0, "Calle Los Alamos 123", "15/02/2021", "15:11", "Lima - Lima - San Isidro", Tools._STATUS_REGISTER));
+        items.add(new TaskModel(0, "Calle Los Alamos 123", "15/02/2021", "15:11", "Lima - Lima - San Isidro", Tools._STATUS_PENDING));
+        items.add(new TaskModel(0, "Calle Los Alamos 123", "15/02/2021", "15:11", "Lima - Lima - San Isidro", Tools._STATUS_PENDING));
+        items.add(new TaskModel(0, "Calle Los Alamos 123", "15/02/2021", "15:11", "Lima - Lima - San Isidro", Tools._STATUS_SEND));
+        items.add(new TaskModel(0, "Calle Los Alamos 123", "15/02/2021", "15:11", "Lima - Lima - San Isidro", Tools._STATUS_PENDING));
+        items.add(new TaskModel(0, "Calle Los Alamos 123", "15/02/2021", "15:11", "Lima - Lima - San Isidro", Tools._STATUS_PENDING));
+        items.add(new TaskModel(0, "Calle Los Alamos 123", "15/02/2021", "15:11", "Lima - Lima - San Isidro", Tools._STATUS_REGISTER));
         return items;
     }
 
     @Override
     public void onTaskClick(int position) {
 
-        if(!items.get(position).getEstado().equals(Tools._STATUS_PENDING)){
+        if (!items.get(position).getEstado().equals(Tools._STATUS_PENDING)) {
             Intent intent = new Intent(this, TaskDetailActivity.class);
             startActivity(intent);
-        }else{
+        } else {
             Intent intent = new Intent(this, TaskAdd.class);
             startActivity(intent);
         }
@@ -199,13 +243,16 @@ public class TaskListActivity extends AppCompatActivity implements NavigationVie
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch(item.getItemId()){
+        switch (item.getItemId()) {
+            case R.id.action_calendar:
+                initCalendar();
+                break;
             case R.id.action_send_task:
-                Tools.snackBarWithIconSuccess(this,viewMainContent,"El reporte del día ha sido enviado");
+                Tools.snackBarWithIconSuccess(this, viewMainContent, "El reporte del día ha sido enviado");
                 break;
             case R.id.action_map:
-                Intent intentMap = new Intent(this,TaskMapActivity.class);
-                intentMap.putExtra("taskDate","22/10/2021");
+                Intent intentMap = new Intent(this, TaskMapActivity.class);
+                intentMap.putExtra("taskDate", "22/10/2021");
                 startActivity(intentMap);
                 break;
         }

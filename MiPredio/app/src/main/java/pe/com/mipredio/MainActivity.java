@@ -75,9 +75,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         switch(item.getItemId()){
-            case R.id.menuProfile:
-                Toast.makeText(this,"Perfil de usuario",Toast.LENGTH_SHORT).show();
-                break;
             case R.id.menuPersonList:
                 Intent intentPerson = new Intent(MainActivity.this, TechnicalProfessionalListActivity.class);
                 startActivity(intentPerson);
@@ -87,7 +84,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 startActivity(intentTask);
                 break;
             case R.id.menuDashboard:
-                Toast.makeText(this,"Dashabord",Toast.LENGTH_SHORT).show();
+                // Toast.makeText(this,"Dashabord",Toast.LENGTH_SHORT).show();
+                Intent intentChart = new Intent(MainActivity.this,ChartActivity.class);
+                startActivity(intentChart);
                 break;
             case R.id.menuLogout:
                 Toast.makeText(this,"Salir App",Toast.LENGTH_SHORT).show();

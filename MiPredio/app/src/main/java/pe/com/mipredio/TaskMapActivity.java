@@ -96,7 +96,7 @@ public class TaskMapActivity extends AppCompatActivity {
             for (int i = 0; i < mapa.size(); i++) {
                 MarkerOptions markerOptions = new MarkerOptions().position(new LatLng( mapa.get(i).getLatitude(), mapa.get(i).getLongitude()));
                 mMap.addMarker(markerOptions)
-                        .setIcon( BitmapDescriptorFactory.fromBitmap( getMarkerBitmapFromView( R.drawable.photo_profile ) ) );
+                        .setIcon( BitmapDescriptorFactory.fromBitmap( getMarkerBitmapFromView( R.drawable.img_predio ) ) );
                 //.setIcon(BitmapDescriptorFactory.fromResource( R.drawable.photo_profile));
                 mMap.moveCamera(zoomingLocation(mapa.get(i).getLatitude(), mapa.get(i).getLongitude()));
             }

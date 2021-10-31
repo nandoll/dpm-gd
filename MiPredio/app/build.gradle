@@ -43,11 +43,8 @@ dependencies {
 
 
     implementation 'com.mikhaellopez:circularimageview:4.3.0'
-    implementation 'com.vivekkaushik.datepicker:datePickerTimeline:0.0.4'
     implementation 'com.balysv:material-ripple:1.0.2'                  // efecto click
     implementation 'com.github.bumptech.glide:glide:3.7.0'             // carga de imagen
     implementation 'com.google.android.gms:play-services-maps:17.0.1'  // google maps
-
-
-
+    implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'          // estadistica
 }

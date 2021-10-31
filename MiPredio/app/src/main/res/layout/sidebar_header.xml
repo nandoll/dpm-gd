@@ -44,16 +44,24 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Daniel Barbú Flores"
-                android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
-                android:textColor="@color/blue_grey_800"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:textColor="@color/grey_1000"
                 />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="daniel.barbu@gmail.com"
+                android:text="Técnico Profesional"
+                android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+                android:textColor="@color/grey_700"
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Código : 102658"
                 android:textAppearance="@style/TextAppearance.AppCompat.Caption"
-                android:textColor="@color/grey_20"
+                android:textColor="@color/grey_500"
                 />
         </LinearLayout>
 

@@ -60,14 +60,7 @@ public class TechnicalProfessionalListAdapter extends RecyclerView.Adapter<Recyc
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-
-        // TextView timestamp, title;
-        // Button buttonStatus;
-        //ImageView imageViewStatus;
-        //TextView textViewStatus;
-
         TextView textViewNames, textViewPhone, textViewSpecialty;
-
         OnTechProfListener mOnTechProfListener;
 
         public ViewHolder(View itemView, OnTechProfListener onTechProfListener) {

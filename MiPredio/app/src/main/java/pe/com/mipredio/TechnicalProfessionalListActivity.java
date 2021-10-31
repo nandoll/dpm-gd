@@ -114,9 +114,7 @@ public class TechnicalProfessionalListActivity
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.menuProfile:
-                Toast.makeText(this, "Perfil de usuario", Toast.LENGTH_SHORT).show();
-                break;
+
             case R.id.menuPersonList:
                 Intent intentPerson = new Intent(TechnicalProfessionalListActivity.this, TechnicalProfessionalListActivity.class);
                 startActivity(intentPerson);
@@ -126,7 +124,8 @@ public class TechnicalProfessionalListActivity
                 startActivity(intent);
                 break;
             case R.id.menuDashboard:
-                Toast.makeText(this, "Dashabord", Toast.LENGTH_SHORT).show();
+                Intent intentChart = new Intent(TechnicalProfessionalListActivity.this, ChartActivity.class);
+                startActivity(intentChart);
                 break;
             case R.id.menuLogout:
                 Toast.makeText(this, "Salir App", Toast.LENGTH_SHORT).show();
