@@ -7,7 +7,7 @@
     android:orientation="vertical"
     android:theme="@style/AppTheme.Material"
     android:id="@+id/main_content"
-    tools:context=".TaskAdd">
+    tools:context=".TaskAddActivity">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appBarLayout"

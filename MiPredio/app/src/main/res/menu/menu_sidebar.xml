@@ -20,9 +20,16 @@
         android:title="Lista de Tareas"></item>
 
     <item
+        android:id="@+id/menuImportRoute"
+        android:icon="@drawable/ic_add_24"
+        android:title="Asignación de ruta"></item>
+
+    <item
         android:id="@+id/menuDashboard"
         android:icon="@drawable/ic_bar_chart_24"
         android:title="Dashboard"></item>
+
+
 
     <item
         android:id="@+id/menuLogout"

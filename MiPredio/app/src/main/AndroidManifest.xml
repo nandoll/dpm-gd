@@ -16,16 +16,16 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
         <activity
+            android:name=".RouteAssignActivity"
+            android:exported="true">
+
+        </activity>
+        <activity
             android:name=".TechnicalProfessionalListActivity"
             android:exported="true" />
         <activity
             android:name=".ChartActivity"
-            android:exported="true">
-
-
-
-
-        </activity>
+            android:exported="true"></activity>
         <activity
             android:name=".TaskMapActivity"
             android:exported="true" />
@@ -41,9 +41,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
 
+
         </activity>
         <activity
-            android:name=".TaskAdd"
+            android:name=".TaskAddActivity"
             android:exported="true" />
         <activity
             android:name=".TaskListActivity"
@@ -51,6 +52,7 @@
         <activity
             android:name=".MainActivity"
             android:exported="true" />
+
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />

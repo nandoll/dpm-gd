@@ -13,7 +13,7 @@ import android.widget.Toast;
 
 import pe.com.mipredio.utils.Tools;
 
-public class TaskAdd extends AppCompatActivity {
+public class TaskAddActivity extends AppCompatActivity {
     private ActionBar actionBar;
     private Toolbar toolbar;
     private View viewMainContent;
@@ -36,7 +36,7 @@ public class TaskAdd extends AppCompatActivity {
         actionBar.setDisplayShowHomeEnabled(true);
 
         actionBar.setTitle("Registrar informe");
-        Tools.setSystemBarColor(this, R.color.cyan_50);
+        Tools.setSystemBarColor(this, R.color.cyan_100);
         Tools.setSystemBarLight(this);
     }
 

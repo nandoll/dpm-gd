@@ -1,7 +1,6 @@
 package pe.com.mipredio;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
@@ -59,7 +58,7 @@ public class TaskListActivity extends AppCompatActivity implements NavigationVie
         floatingActionButtonAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(TaskListActivity.this, TaskAdd.class);
+                Intent intent = new Intent(TaskListActivity.this, TaskAddActivity.class);
                 startActivity(intent);
             }
         });
@@ -138,7 +137,7 @@ public class TaskListActivity extends AppCompatActivity implements NavigationVie
         actionBar.setHomeButtonEnabled(true);
         actionBar.setTitle("Lista de Tarea");
 
-        Tools.setSystemBarColor(this, R.color.cyan_50);
+        Tools.setSystemBarColor(this, R.color.cyan_100);
         Tools.setSystemBarLight(this);
     }
 
@@ -184,14 +183,16 @@ public class TaskListActivity extends AppCompatActivity implements NavigationVie
                 startActivity(intentPerson);
                 break;
             case R.id.menuTaskList:
-                // Toast.makeText(this, "Lista de tareas", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(TaskListActivity.this, TaskListActivity.class);
                 startActivity(intent);
                 break;
             case R.id.menuDashboard:
-                // Toast.makeText(this, "Dashabord", Toast.LENGTH_SHORT).show();
                 Intent intentChart = new Intent(TaskListActivity.this, ChartActivity.class);
                 startActivity(intentChart);
+                break;
+            case R.id.menuImportRoute:
+                Intent intentRoute = new Intent(TaskListActivity.this, RouteAssignActivity.class);
+                startActivity(intentRoute);
                 break;
             case R.id.menuLogout:
                 Toast.makeText(this, "Salir App", Toast.LENGTH_SHORT).show();
@@ -227,7 +228,7 @@ public class TaskListActivity extends AppCompatActivity implements NavigationVie
             Intent intent = new Intent(this, TaskDetailActivity.class);
             startActivity(intent);
         } else {
-            Intent intent = new Intent(this, TaskAdd.class);
+            Intent intent = new Intent(this, TaskAddActivity.class);
             startActivity(intent);
         }
     }

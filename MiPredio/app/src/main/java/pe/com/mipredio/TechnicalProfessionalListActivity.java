@@ -21,7 +21,6 @@ import com.google.android.material.navigation.NavigationView;
 import java.util.ArrayList;
 import java.util.List;
 
-import pe.com.mipredio.model.TaskModel;
 import pe.com.mipredio.model.TechnicalProfessionalModel;
 import pe.com.mipredio.utils.Tools;
 
@@ -55,7 +54,7 @@ public class TechnicalProfessionalListActivity
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setHomeButtonEnabled(true);
         actionBar.setTitle("Lista de profesionales");
-        Tools.setSystemBarColor(this, R.color.cyan_50);
+        Tools.setSystemBarColor(this, R.color.cyan_100);
         Tools.setSystemBarLight(this);
     }
 
@@ -126,6 +125,10 @@ public class TechnicalProfessionalListActivity
             case R.id.menuDashboard:
                 Intent intentChart = new Intent(TechnicalProfessionalListActivity.this, ChartActivity.class);
                 startActivity(intentChart);
+                break;
+            case R.id.menuImportRoute:
+                Intent intentRoute = new Intent(TechnicalProfessionalListActivity.this, RouteAssignActivity.class);
+                startActivity(intentRoute);
                 break;
             case R.id.menuLogout:
                 Toast.makeText(this, "Salir App", Toast.LENGTH_SHORT).show();

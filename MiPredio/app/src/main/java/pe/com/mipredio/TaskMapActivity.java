@@ -163,7 +163,7 @@ public class TaskMapActivity extends AppCompatActivity {
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setDisplayShowHomeEnabled(true);
         actionBar.setTitle("Ubicaciones del predio");
-        Tools.setSystemBarColor(this, R.color.cyan_50);
+        Tools.setSystemBarColor(this, R.color.cyan_100);
         Tools.setSystemBarLight(this);
     }
 

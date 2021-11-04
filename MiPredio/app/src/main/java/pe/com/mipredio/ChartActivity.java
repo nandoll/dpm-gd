@@ -9,33 +9,23 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
 import android.app.DatePickerDialog;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.Typeface;
 import android.os.Bundle;
-import android.util.DisplayMetrics;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.DatePicker;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.github.mikephil.charting.charts.BarChart;
-import com.github.mikephil.charting.components.Description;
 import com.github.mikephil.charting.components.XAxis;
-import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
 import com.github.mikephil.charting.formatter.ValueFormatter;
 import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
-import com.github.mikephil.charting.utils.ColorTemplate;
-import com.github.mikephil.charting.utils.Utils;
 import com.google.android.material.navigation.NavigationView;
 
 import java.text.DecimalFormat;
@@ -81,7 +71,7 @@ public class ChartActivity extends AppCompatActivity implements NavigationView.O
         actionBar.setHomeButtonEnabled(true);
         actionBar.setTitle("Reporte General");
 
-        Tools.setSystemBarColor(this, R.color.cyan_50);
+        Tools.setSystemBarColor(this, R.color.cyan_100);
         Tools.setSystemBarLight(this);
     }
 
@@ -174,9 +164,12 @@ public class ChartActivity extends AppCompatActivity implements NavigationView.O
                 startActivity(intentTask);
                 break;
             case R.id.menuDashboard:
-                // Toast.makeText(this,"Dashabord",Toast.LENGTH_SHORT).show();
                 Intent intentChart = new Intent(ChartActivity.this, ChartActivity.class);
                 startActivity(intentChart);
+                break;
+            case R.id.menuImportRoute:
+                Intent intentRoute = new Intent(ChartActivity.this, RouteAssignActivity.class);
+                startActivity(intentRoute);
                 break;
             case R.id.menuLogout:
                 Toast.makeText(this, "Salir App", Toast.LENGTH_SHORT).show();
