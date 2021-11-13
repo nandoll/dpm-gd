@@ -137,7 +137,7 @@ public class TaskListActivity extends AppCompatActivity implements NavigationVie
         actionBar.setHomeButtonEnabled(true);
         actionBar.setTitle("Lista de Tarea");
 
-        Tools.setSystemBarColor(this, R.color.cyan_100);
+        Tools.setSystemBarColor(this, R.color.colorPrimary);
         Tools.setSystemBarLight(this);
     }
 
@@ -198,7 +198,7 @@ public class TaskListActivity extends AppCompatActivity implements NavigationVie
                 Toast.makeText(this, "Salir App", Toast.LENGTH_SHORT).show();
                 break;
         }
-        // return false;
+        drawer.closeDrawer(GravityCompat.START);
         return true;
     }
 

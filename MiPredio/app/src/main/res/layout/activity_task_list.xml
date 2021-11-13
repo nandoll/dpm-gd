@@ -24,7 +24,7 @@
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
-                android:background="@color/cyan_300"
+                android:background="@color/colorPrimary"
                 android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
                 app:contentInsetStartWithNavigation="0dp"
                 app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
@@ -45,7 +45,7 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/grey_5"
+                android:background="@color/teal_50"
                 android:padding="@dimen/spacing_small">
 
                 <TextView
@@ -57,7 +57,7 @@
                     android:padding="@dimen/spacing_small"
                     android:text=" Octubre 28 , 2021"
                     android:textAppearance="@style/TextAppearance.AppCompat.Large"
-                    android:textColor="@color/grey_90" />
+                    android:textColor="@color/colorPrimary" />
 
                 <TextView
                     android:id="@+id/textDateSelectedDay"
@@ -68,7 +68,7 @@
                     android:padding="@dimen/spacing_small"
                     android:text="Jueves"
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                    android:textColor="@color/grey_90" />
+                    android:textColor="@color/colorPrimary" />
 
             </RelativeLayout>
 
@@ -81,9 +81,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Lista de Predios"
-                android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
-                android:textColor="@color/grey_40"
-                android:textStyle="bold" />
+                android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+                android:textStyle="bold"
+                android:textColor="@color/grey_800"
+                />
 
             <View
                 android:layout_width="match_parent"
@@ -109,7 +110,7 @@
             android:layout_alignParentBottom="true"
             android:layout_gravity="end|bottom"
             android:layout_margin="10dp"
-            android:backgroundTint="@color/green_A200"
+            android:backgroundTint="@color/teal_A700"
             android:src="@drawable/ic_add_24"
             app:borderWidth="0dp"
             app:elevation="4dp"
@@ -127,7 +128,9 @@
         android:layout_gravity="start"
         android:fitsSystemWindows="false"
         app:headerLayout="@layout/sidebar_header"
-        app:menu="@menu/menu_sidebar" />
+        app:menu="@menu/menu_sidebar"
+
+        />
 
 
 </androidx.drawerlayout.widget.DrawerLayout>

@@ -40,7 +40,7 @@
     </style>
 
     <style name="Button.Green" parent="@style/Widget.AppCompat.Button.Colored">
-        <item name="colorButtonNormal">@color/light_green_500</item>
+        <item name="colorButtonNormal">@color/teal_A700</item>
         <item name="android:textColor">@android:color/white</item>
     </style>
 
@@ -233,6 +233,11 @@
     <style name="ProgressBar.White" parent="@style/AppTheme">
         <item name="colorPrimary">@android:color/white</item>
         <item name="colorAccent">@android:color/white</item>
+    </style>
+
+    <style name="ProgressBar.Primary" parent="@style/AppTheme">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorAccent">@color/colorPrimaryLight</item>
     </style>
 
     <style name="Checkbox.Blue" parent="@style/AppTheme">

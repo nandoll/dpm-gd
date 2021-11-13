@@ -49,7 +49,7 @@ public class TaskDetailActivity extends AppCompatActivity {
         actionBar.setDisplayShowHomeEnabled(true);
 
         actionBar.setTitle("Detalle del informe");
-        Tools.setSystemBarColor(this, R.color.cyan_100);
+        Tools.setSystemBarColor(this, R.color.colorPrimary);
         Tools.setSystemBarLight(this);
     }
 

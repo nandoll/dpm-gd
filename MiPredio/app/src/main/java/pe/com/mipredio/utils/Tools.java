@@ -1,10 +1,17 @@
 package pe.com.mipredio.utils;
 
 import android.app.Activity;
+import android.app.Application;
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
+import android.text.Layout;
+import android.util.Patterns;
+import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -13,6 +20,8 @@ import android.widget.TextView;
 
 import androidx.annotation.ColorRes;
 import androidx.annotation.DrawableRes;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.drawable.RoundedBitmapDrawable;
 import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory;
 
@@ -22,14 +31,16 @@ import com.bumptech.glide.request.target.BitmapImageViewTarget;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.material.snackbar.Snackbar;
 
+import org.w3c.dom.Text;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import pe.com.mipredio.R;
 
-public class Tools {
+public class Tools{
     public static final String _STATUS_REGISTER = "registrado";
-    public static final int _COLOR_REGISTER = R.color.green_A400;
+    public static final int _COLOR_REGISTER = R.color.teal_500;
     public static final int _IMG_REGISTER = R.drawable.ic_done_all_24;
 
     public static final String _STATUS_PENDING = "pediente";
@@ -37,8 +48,15 @@ public class Tools {
     public static final int _IMG_PENDING= R.drawable.ic_done_24;
 
     public static final String _STATUS_SEND = "enviado";
-    public static final int _COLOR_SEND = R.color.blue_400;
+    public static final int _COLOR_SEND = R.color.teal_500;
     public static final int _IMG_SEND= R.drawable.ic_send_24;
+
+    // Notifications ID
+    public  static  final  int NOTIFICATION_CLOSE_DAY = 1;
+
+    public static final  String BREAK_LINE = "\n";
+
+    static ProgressDialog progressDialog;
 
 
     public static void setSystemBarColor(Activity act) {
@@ -49,7 +67,6 @@ public class Tools {
             window.setStatusBarColor(act.getResources().getColor(R.color.colorPrimaryDark));
         }
     }
-
     public static void setSystemBarColor(Activity act, @ColorRes int color) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             Window window = act.getWindow();
@@ -58,7 +75,6 @@ public class Tools {
             window.setStatusBarColor(act.getResources().getColor(color));
         }
     }
-
     public static void setSystemBarLight(Activity act) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             View view = act.findViewById(android.R.id.content);
@@ -66,7 +82,6 @@ public class Tools {
             view.setSystemUiVisibility(flags);
         }
     }
-
     public static void displayImageRound(final Context ctx, final ImageView img, @DrawableRes int drawable) {
         try {
             Glide.with(ctx).load(drawable).asBitmap().centerCrop().into(new BitmapImageViewTarget(img) {
@@ -80,7 +95,6 @@ public class Tools {
         } catch (Exception e) {
         }
     }
-
     // Snackbar
     public static void snackBarWithIconSuccess(Activity activity, View contentView, String text) {
         final Snackbar snackbar = Snackbar.make(contentView, "", Snackbar.LENGTH_SHORT);
@@ -96,7 +110,7 @@ public class Tools {
         snackBarView.addView(custom_view, 0);
         snackbar.show();
     }
-
+    // Google Map
     public static GoogleMap configActivityMaps(GoogleMap googleMap) {
         // set map type
         googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
@@ -116,7 +130,6 @@ public class Tools {
         return googleMap;
     }
 
-
     // Date
     public static String getFormatDate(Long dateTime) {
         SimpleDateFormat newFormat = new SimpleDateFormat("MMMM dd, yyyy");
@@ -126,4 +139,41 @@ public class Tools {
         SimpleDateFormat newFormat = new SimpleDateFormat("EEEE");
         return newFormat.format(new Date(dateTime));
     }
+
+    // Validate email
+    public static boolean isEmail(String cadena) {
+        boolean resultado;
+        if (Patterns.EMAIL_ADDRESS.matcher(cadena).matches()) {
+            resultado = true;
+        } else {
+            resultado = false;
+        }
+        return resultado;
+    }
+    // Alert
+    public static void showAlertDialog(Context context,String title, String description) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setTitle(title);
+        builder.setMessage(description);
+        builder.setPositiveButton(R.string.btnOk, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                // Snackbar.make(parent_view, "Agree clicked", Snackbar.LENGTH_SHORT).show();
+            }
+        });
+        builder.show();
+    }
+
+    public static void showSaveProgressDialog(ProgressDialog progressDialog){
+        progressDialog.show();
+        progressDialog.setContentView(R.layout.progress_dialog_saving);
+        progressDialog.setCancelable(false);
+        progressDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+    }
+
+    public static void dismissProgressDialog(ProgressDialog progressDialog){
+        progressDialog.dismiss();
+    }
+
+
 }

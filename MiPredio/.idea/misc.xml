@@ -12,7 +12,9 @@
         <entry key="..\:/Ejercicios/UPC/proyecto/dpm-gd/MiPredio/app/src/main/res/drawable/button_ripple.xml" value="0.2203125" />
         <entry key="..\:/Ejercicios/UPC/proyecto/dpm-gd/MiPredio/app/src/main/res/drawable/button_rounded_shape.xml" value="0.2203125" />
         <entry key="..\:/Ejercicios/UPC/proyecto/dpm-gd/MiPredio/app/src/main/res/drawable/circle.xml" value="0.2203125" />
+        <entry key="..\:/Ejercicios/UPC/proyecto/dpm-gd/MiPredio/app/src/main/res/drawable/dialog_progress_background.xml" value="0.2203125" />
         <entry key="..\:/Ejercicios/UPC/proyecto/dpm-gd/MiPredio/app/src/main/res/drawable/ic_arrow_right.xml" value="0.2203125" />
+        <entry key="..\:/Ejercicios/UPC/proyecto/dpm-gd/MiPredio/app/src/main/res/drawable/ic_calendar_today_24.xml" value="0.146875" />
         <entry key="..\:/Ejercicios/UPC/proyecto/dpm-gd/MiPredio/app/src/main/res/drawable/ic_done_24.xml" value="0.2203125" />
         <entry key="..\:/Ejercicios/UPC/proyecto/dpm-gd/MiPredio/app/src/main/res/drawable/ic_done_all_24.xml" value="0.2203125" />
         <entry key="..\:/Ejercicios/UPC/proyecto/dpm-gd/MiPredio/app/src/main/res/drawable/ic_send_24.xml" value="0.2203125" />
@@ -23,13 +25,16 @@
         <entry key="..\:/Ejercicios/UPC/proyecto/dpm-gd/MiPredio/app/src/main/res/layout/activity_route_assign.xml" value="0.33" />
         <entry key="..\:/Ejercicios/UPC/proyecto/dpm-gd/MiPredio/app/src/main/res/layout/activity_task_add.xml" value="0.33" />
         <entry key="..\:/Ejercicios/UPC/proyecto/dpm-gd/MiPredio/app/src/main/res/layout/activity_task_detail.xml" value="0.36465116279069765" />
-        <entry key="..\:/Ejercicios/UPC/proyecto/dpm-gd/MiPredio/app/src/main/res/layout/activity_task_list.xml" value="0.20416666666666666" />
+        <entry key="..\:/Ejercicios/UPC/proyecto/dpm-gd/MiPredio/app/src/main/res/layout/activity_task_list.xml" value="0.33" />
         <entry key="..\:/Ejercicios/UPC/proyecto/dpm-gd/MiPredio/app/src/main/res/layout/activity_task_map.xml" value="0.22" />
         <entry key="..\:/Ejercicios/UPC/proyecto/dpm-gd/MiPredio/app/src/main/res/layout/activity_technical_professional_list.xml" value="0.31911532385466035" />
         <entry key="..\:/Ejercicios/UPC/proyecto/dpm-gd/MiPredio/app/src/main/res/layout/button_ripple.xml" value="0.20416666666666666" />
         <entry key="..\:/Ejercicios/UPC/proyecto/dpm-gd/MiPredio/app/src/main/res/layout/dialog_map_detail.xml" value="0.20416666666666666" />
+        <entry key="..\:/Ejercicios/UPC/proyecto/dpm-gd/MiPredio/app/src/main/res/layout/dialog_progress.xml" value="0.33" />
         <entry key="..\:/Ejercicios/UPC/proyecto/dpm-gd/MiPredio/app/src/main/res/layout/item_task_list.xml" value="0.5" />
         <entry key="..\:/Ejercicios/UPC/proyecto/dpm-gd/MiPredio/app/src/main/res/layout/item_technical_professional_list.xml" value="0.5" />
+        <entry key="..\:/Ejercicios/UPC/proyecto/dpm-gd/MiPredio/app/src/main/res/layout/progress_dialog.xml" value="0.20416666666666666" />
+        <entry key="..\:/Ejercicios/UPC/proyecto/dpm-gd/MiPredio/app/src/main/res/layout/progress_dialog_saving.xml" value="0.5" />
         <entry key="..\:/Ejercicios/UPC/proyecto/dpm-gd/MiPredio/app/src/main/res/layout/sheet_map.xml" value="0.33" />
         <entry key="..\:/Ejercicios/UPC/proyecto/dpm-gd/MiPredio/app/src/main/res/layout/sidebar_header.xml" value="0.33" />
         <entry key="..\:/Ejercicios/UPC/proyecto/dpm-gd/MiPredio/app/src/main/res/layout/snackbar_icon_text.xml" value="0.1" />

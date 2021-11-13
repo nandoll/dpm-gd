@@ -71,7 +71,7 @@ public class ChartActivity extends AppCompatActivity implements NavigationView.O
         actionBar.setHomeButtonEnabled(true);
         actionBar.setTitle("Reporte General");
 
-        Tools.setSystemBarColor(this, R.color.cyan_100);
+        Tools.setSystemBarColor(this, R.color.colorPrimary);
         Tools.setSystemBarLight(this);
     }
 
@@ -175,6 +175,7 @@ public class ChartActivity extends AppCompatActivity implements NavigationView.O
                 Toast.makeText(this, "Salir App", Toast.LENGTH_SHORT).show();
                 break;
         }
+        drawer.closeDrawer(GravityCompat.START);
         return true;
     }
 

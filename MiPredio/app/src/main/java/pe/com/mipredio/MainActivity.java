@@ -41,7 +41,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         actionBar.setHomeButtonEnabled(true);
         actionBar.setTitle("Información General");
 
-        Tools.setSystemBarColor(this, R.color.cyan_100);
+        Tools.setSystemBarColor(this, R.color.colorPrimary);
         Tools.setSystemBarLight(this);
     }
 
@@ -95,7 +95,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 Toast.makeText(this,"Salir App",Toast.LENGTH_SHORT).show();
                 break;
         }
-        // return false;
+        drawer.closeDrawer(GravityCompat.START);
         return true;
     }
 }

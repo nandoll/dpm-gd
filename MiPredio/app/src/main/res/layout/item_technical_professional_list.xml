@@ -49,8 +49,8 @@
                         android:singleLine="true"
                         android:text="Anonymous"
                         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                        android:textColor="@color/grey_90"
-                        android:textStyle="bold" />
+                        android:textColor="@color/grey_800"
+                        />
 
                     <TextView
                         android:id="@+id/technicalPhone"
@@ -73,17 +73,24 @@
                         android:textAppearance="@style/TextAppearance.AppCompat.Caption"
                         android:textColor="@color/grey_40" />
 
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/spacing_small" />
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@color/grey_10"
+                        />
+
                 </LinearLayout>
+
+
             </RelativeLayout>
             <View
                 android:layout_width="@dimen/spacing_large"
                 android:layout_height="0dp" />
         </LinearLayout>
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/grey_20"
-            />
+
 
     </LinearLayout>
 

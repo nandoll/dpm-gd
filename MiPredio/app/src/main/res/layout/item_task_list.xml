@@ -39,7 +39,7 @@
                     android:singleLine="true"
                     android:text="03:15 PM"
                     android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                    android:textColor="@color/grey_90" />
+                    android:textColor="@color/colorPrimary" />
 
                 <TextView
                     android:id="@+id/medidorLabel"
@@ -52,8 +52,9 @@
                     android:singleLine="true"
                     android:text="Medidor:"
                     android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-                    android:textColor="@color/grey_90"
+                    android:textColor="@color/grey_800"
                     android:textStyle="bold" />
+
                 <TextView
                     android:id="@+id/medidor"
                     android:layout_width="wrap_content"
@@ -78,7 +79,7 @@
                     android:singleLine="true"
                     android:text="Ubigeo:"
                     android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-                    android:textColor="@color/grey_90"
+                    android:textColor="@color/grey_800"
                     android:textStyle="bold" />
                 <TextView
                     android:id="@+id/ubigeo"
@@ -102,7 +103,7 @@
                     android:singleLine="true"
                     android:text="Dirección:"
                     android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-                    android:textColor="@color/grey_90"
+                    android:textColor="@color/grey_800"
                     android:textStyle="bold" />
                 <TextView
                     android:id="@+id/direccion"

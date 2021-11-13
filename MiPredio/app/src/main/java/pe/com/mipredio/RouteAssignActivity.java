@@ -5,6 +5,7 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
 import android.content.Intent;
@@ -84,6 +85,7 @@ public class RouteAssignActivity extends AppCompatActivity implements Navigation
                 Toast.makeText(this, "Salir App", Toast.LENGTH_SHORT).show();
                 break;
         }
+        drawer.closeDrawer(GravityCompat.START);
         return true;
     }
 }

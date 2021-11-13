@@ -2,11 +2,11 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main_content"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:theme="@style/AppTheme.Material"
-    android:id="@+id/main_content"
     tools:context=".TaskAddActivity">
 
     <com.google.android.material.appbar.AppBarLayout
@@ -19,7 +19,7 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="@color/cyan_300"
+            android:background="@color/colorPrimary"
             android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
             app:contentInsetStartWithNavigation="0dp"
             app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
@@ -47,12 +47,14 @@
                 android:orientation="vertical">
 
                 <LinearLayout
+                    android:id="@+id/layoutProfile"
                     android:layout_width="match_parent"
                     android:layout_height="230dp"
                     android:background="@color/overlay_dark_5"
                     android:orientation="vertical">
 
                     <ImageView
+                        android:id="@+id/imagePredio"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         app:srcCompat="@drawable/img_default_image" />
@@ -80,6 +82,7 @@
                         android:layout_height="wrap_content">
 
                         <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/textAddress"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:padding="16dp" />
@@ -93,7 +96,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Persona de contacto"
+                        android:text="Nombres"
                         android:textAppearance="@style/TextAppearance.AppCompat.Body2"
                         android:textColor="@color/grey_60" />
 
@@ -103,13 +106,38 @@
                         android:layout_height="wrap_content">
 
                         <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/textNames"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:padding="16dp" />
 
                     </com.google.android.material.textfield.TextInputLayout>
 
-                                        <View
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="@dimen/spacing_medium" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Apellidos"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+                        android:textColor="@color/grey_60" />
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/textLastName"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:padding="16dp" />
+
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <View
                         android:layout_width="0dp"
                         android:layout_height="@dimen/spacing_medium" />
 
@@ -126,6 +154,8 @@
                         android:layout_height="wrap_content">
 
                         <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/textDocID"
+                            android:inputType="number"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:padding="16dp" />
@@ -161,9 +191,11 @@
                                 app:prefixTextColor="@color/grey_40">
 
                                 <com.google.android.material.textfield.TextInputEditText
+                                    android:id="@+id/textPreviousDataCollection"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
-                                    android:padding="16dp" />
+                                    android:padding="16dp"
+                                    />
 
                             </com.google.android.material.textfield.TextInputLayout>
 
@@ -192,6 +224,7 @@
                                 android:layout_height="wrap_content">
 
                                 <com.google.android.material.textfield.TextInputEditText
+                                    android:id="@+id/textCurrentDataCollection"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
                                     android:padding="16dp" />
@@ -216,8 +249,7 @@
                     <com.google.android.material.textfield.TextInputLayout
                         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="Mensaje">
+                        android:layout_height="wrap_content">
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:layout_width="match_parent"
@@ -240,11 +272,12 @@
         </androidx.core.widget.NestedScrollView>
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/floatingImage"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/spacing_smlarge"
             android:clickable="true"
-            app:backgroundTint="@color/cyan_700"
+            app:backgroundTint="@color/teal_A700"
             app:fabSize="normal"
             app:layout_anchor="@id/lyt_form"
             app:layout_anchorGravity="top|end|right"

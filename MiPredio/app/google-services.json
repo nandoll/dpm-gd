@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1016065917504",
+    "project_id": "mi-predio",
+    "storage_bucket": "mi-predio.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1016065917504:android:eec91803c4f325df4dd5a5",
+        "android_client_info": {
+          "package_name": "pe.com.mipredio"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1016065917504-j5r7aehrfpok20ssl2dc9bgalcfris55.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCD4RV-3ZFHmqm7h1ksOs3GNnz4pFu05cA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1016065917504-j5r7aehrfpok20ssl2dc9bgalcfris55.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
