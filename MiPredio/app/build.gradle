@@ -50,4 +50,8 @@ dependencies {
     implementation 'com.google.android.gms:play-services-maps:17.0.1'  // google maps
     implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'          // estadistica
     implementation 'com.github.Drjacky:ImagePicker:1.8.4'           // camera/gallery
+
+    implementation 'com.squareup.retrofit2:retrofit:2.8.1'
+    implementation 'com.squareup.retrofit2:converter-gson:2.8.1'
+    implementation 'com.squareup.okhttp3:logging-interceptor:4.8.1'
 }
