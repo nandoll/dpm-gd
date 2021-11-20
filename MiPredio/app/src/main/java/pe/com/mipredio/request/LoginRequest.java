@@ -2,22 +2,22 @@ package pe.com.mipredio.request;
 
 public class LoginRequest {
 
-    private  String correo;
-    private  String contrasena;
+    private  String username;
+    private  String password;
 
-    public String getCorreo() {
-        return correo;
+    public String getUsername() {
+        return username;
     }
 
-    public void setCorreo(String correo) {
-        this.correo = correo;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
-    public String getContrasena() {
-        return contrasena;
+    public String getPassword() {
+        return password;
     }
 
-    public void setContrasena(String contrasena) {
-        this.contrasena = contrasena;
+    public void setPassword(String password) {
+        this.password = password;
     }
 }

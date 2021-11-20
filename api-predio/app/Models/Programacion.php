@@ -14,7 +14,7 @@ class Programacion extends Model
     protected $returnType       = 'array';
     protected $useSoftDeletes   = false;
     protected $protectFields    = true;
-    protected $allowedFields    = ['idPersona','idPredio','fecha','foto','estado','latitud','longitud'];
+    protected $allowedFields    = ['idPersona','idPredio','fecha','foto','estado','latitud','longitud','situacion', 'hora'];
 
     // Dates
     protected $useTimestamps = true;

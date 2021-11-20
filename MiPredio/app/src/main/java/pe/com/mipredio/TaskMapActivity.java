@@ -5,21 +5,13 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.content.ContextCompat;
 
-import android.Manifest;
 import android.content.Context;
-import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import android.media.ThumbnailUtils;
-import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -27,6 +19,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -41,10 +34,19 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import pe.com.mipredio.api.ApiClient;
 import pe.com.mipredio.classes.MapClass;
+import pe.com.mipredio.response.ProgramacionListaMapaResponse;
+import pe.com.mipredio.utils.Consts;
+import pe.com.mipredio.utils.SharedPreference;
 import pe.com.mipredio.utils.Tools;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class TaskMapActivity extends AppCompatActivity {
     private GoogleMap mMap;
@@ -53,15 +55,18 @@ public class TaskMapActivity extends AppCompatActivity {
     private ActionBar actionBar;
     private View viewMainContent;
 
+    private String id;
+    private String fecha;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_task_map);
         viewMainContent = findViewById(R.id.main_content);
-
-        // initMarkers();
-        initMapFragment();
+        id = getIntent().getStringExtra("taskId");
+        fecha = getIntent().getStringExtra("taskDate");
+        initMap();
         initComponent();
         initToolbar();
     }
@@ -85,34 +90,7 @@ public class TaskMapActivity extends AppCompatActivity {
         return returnedBitmap;
     }
 
-    private void initMarkers(){
-        Intent intent = getIntent();
-        String id = intent.getStringExtra("taskId");
-        String fecha = intent.getStringExtra("taskDate");
-
-        List<MapClass> mapa = getMarkersPredio(id, fecha);
-        if(mapa.size() > 0){
-
-            for (int i = 0; i < mapa.size(); i++) {
-                MarkerOptions markerOptions = new MarkerOptions().position(new LatLng( mapa.get(i).getLatitude(), mapa.get(i).getLongitude()));
-                mMap.addMarker(markerOptions)
-                        .setIcon( BitmapDescriptorFactory.fromBitmap( getMarkerBitmapFromView( R.drawable.img_predio ) ) );
-                //.setIcon(BitmapDescriptorFactory.fromResource( R.drawable.photo_profile));
-                mMap.moveCamera(zoomingLocation(mapa.get(i).getLatitude(), mapa.get(i).getLongitude()));
-            }
-            mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
-                @Override
-                public boolean onMarkerClick(@NonNull Marker marker) {
-                    bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-                    mMap.animateCamera(zoomingLocation(marker.getPosition().latitude, marker.getPosition().longitude));
-                    return false;
-                }
-            });
-        }
-    }
-
-
-    private void initMapFragment() {
+    private void initMap() {
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.mapa);
         mapFragment.getMapAsync(new OnMapReadyCallback() {
             @Override
@@ -125,21 +103,7 @@ public class TaskMapActivity extends AppCompatActivity {
                 uiSettings.setCompassEnabled(true);
                 uiSettings.setZoomControlsEnabled(true);
                 uiSettings.setZoomGesturesEnabled(true);
-                initMarkers();
-
-                /*
-                MarkerOptions markerOptions = new MarkerOptions().position(new LatLng(-12.082396, -77.0073197));
-                mMap.addMarker(markerOptions);
-                mMap.moveCamera(zoomingLocation());
-                mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
-                    @Override
-                    public boolean onMarkerClick(@NonNull Marker marker) {
-                        bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-                        mMap.animateCamera(zoomingLocation());
-                        return false;
-                    }
-                });
-                */
+                generateMarkers();
             }
         });
     }
@@ -178,20 +142,52 @@ public class TaskMapActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private List<MapClass> getMarkersPredio(String id, String fecha){
-        List<MapClass> items = new ArrayList<>();
-        if(id != null){
-            items.add(new MapClass(-12.08962221353456, -77.04430495519286,"Calle Vida Nueva 4423","Lima - Lima - Lince","987654152","Juan Carlos Peña"));
-        }else if (fecha != null){
-            items.add(new MapClass(-12.08962221353456, -77.04430495519286,"Calle Vida Nueva 4423","Lima - Lima - Lince","987654152","Juan Carlos Peña"));
-            items.add(new MapClass(-12.08872200100299, -77.04443228249477,"Calle Vida Nueva 4423","Lima - Lima - Lince","987989988","Maria Adrea Quinto"));
-            items.add(new MapClass(-12.08886887381922, -77.04547968509245,"Calle Vida Nueva 4423","Lima - Lima - Lince","998789888","Luis Santiago Flores"));
-            items.add(new MapClass(-12.089145571502245, -77.04572108390096,"Calle Vida Nueva 4423","Lima - Lima - Lince","980890001","Ana Cecilia Torres"));
-            items.add(new MapClass(-12.0895783108982, -77.04567217696597,"Calle Vida Nueva 4423","Lima - Lima - Lince","966550447","Santiago Millones"));
-            items.add(new MapClass(-12.089634452148799, -77.0443073648624,"Calle Vida Nueva 4423","Lima - Lima - Lince","987722413","Alberto Toledo"));
-            items.add(new MapClass(-12.08975921044435, -77.04335045422361,"Calle Vida Nueva 4423","Lima - Lima - Lince","9846654142","Pedro Sotelo"));
-            items.add(new MapClass(-12.090593538261201, -77.04554859733639,"Calle Vida Nueva 4423","Lima - Lima - Lince","987897520","Lenin Toledo"));
+    private void getMarkers(List<MapClass> mapa) {
+        if (mapa.size() > 0) {
+            for (int i = 0; i < mapa.size(); i++) {
+                MarkerOptions markerOptions = new MarkerOptions().position(new LatLng(mapa.get(i).getLatitude(), mapa.get(i).getLongitude()));
+                mMap.addMarker(markerOptions)
+                        .setIcon(BitmapDescriptorFactory.fromBitmap(getMarkerBitmapFromView(R.drawable.img_predio)));
+                mMap.moveCamera(zoomingLocation(mapa.get(i).getLatitude(), mapa.get(i).getLongitude()));
+            }
+            mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+                @Override
+                public boolean onMarkerClick(@NonNull Marker marker) {
+                    bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+                    mMap.animateCamera(zoomingLocation(marker.getPosition().latitude, marker.getPosition().longitude));
+                    return false;
+                }
+            });
         }
-        return items;
+    }
+
+    private void generateMarkers() {
+        List<MapClass> items = new ArrayList<>();
+        String token = SharedPreference.getDefaultsPreference(Consts.TOKEN, this);
+        Map<String, String> requestBody = new HashMap<>();
+        requestBody.put("fecha", fecha);
+        Call<List<ProgramacionListaMapaResponse>> programacionListaMapa = ApiClient.getProgramacionService().programacionListaMapa(token, requestBody);
+        programacionListaMapa.enqueue(new Callback<List<ProgramacionListaMapaResponse>>() {
+            @Override
+            public void onResponse(Call<List<ProgramacionListaMapaResponse>> call, Response<List<ProgramacionListaMapaResponse>> response) {
+                if (response.isSuccessful()) {
+                    List<ProgramacionListaMapaResponse> lista = response.body();
+                    Integer total = lista.size();
+
+                    if (total > 0) {
+                        for (int i = 0; i < lista.size(); i++) {
+                            items.add(new MapClass(Double.parseDouble(lista.get(i).getLatitud()), Double.parseDouble(lista.get(i).getLongitud()), "", "", "", ""));
+                        }
+                    }
+                    getMarkers(items);
+                    Log.e("TOTAL_MAPA", total.toString());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<ProgramacionListaMapaResponse>> call, Throwable t) {
+                Toast.makeText(TaskMapActivity.this, "Error al consultar las ubicaciones en mapa", Toast.LENGTH_LONG).show();
+            }
+        });
     }
 }

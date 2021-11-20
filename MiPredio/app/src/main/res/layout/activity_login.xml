@@ -7,7 +7,9 @@
     android:background="@android:color/white"
     android:orientation="vertical"
     android:theme="@style/AppTheme.Material"
-    tools:context=".LoginActivity">
+    tools:context=".LoginActivity"
+    android:id="@+id/main_content"
+    >
 
     <LinearLayout
         android:layout_width="330dp"
@@ -21,8 +23,8 @@
             android:layout_height="@dimen/spacing_middle" />
 
         <ImageView
-            android:layout_width="120dp"
-            android:layout_height="120dp"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
             android:layout_gravity="center_horizontal"
             android:src="@drawable/login_logo" />
 
@@ -155,14 +157,14 @@
                 android:layout_width="@dimen/spacing_small"
                 android:layout_height="1dp" />
 
-            <TextView
+
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/enterOff"
+                style="@style/Widget.MaterialComponents.Button.TextButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:clickable="true"
                 android:text="Entrar"
-                android:textAppearance="@style/Base.TextAppearance.AppCompat.Subhead"
-                android:textColor="@color/colorPrimary" />
+                />
 
         </LinearLayout>
 

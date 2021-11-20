@@ -24,7 +24,7 @@
             android:layout_width="70dp"
             android:layout_height="70dp"
             android:layout_marginTop="-36dp"
-            android:src="@drawable/photo_profile"
+            android:src="@drawable/ic_person_outline_24"
             app:civ_border="true"
             app:civ_border_color="@color/grey_10"
             app:civ_border_width="3dp"
@@ -41,27 +41,32 @@
             android:orientation="vertical">
 
             <TextView
+                android:id="@+id/textName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Daniel Barbú Flores"
+                android:text="Anónimo"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                 android:textColor="@color/grey_1000"
                 />
 
             <TextView
+                android:id="@+id/textSpecialty"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Técnico Profesional"
                 android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
                 android:textColor="@color/grey_700"
+                android:visibility="gone"
                 />
 
             <TextView
+                android:id="@+id/textRol"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Código : 102658"
                 android:textAppearance="@style/TextAppearance.AppCompat.Caption"
                 android:textColor="@color/grey_500"
+                android:visibility="gone"
                 />
         </LinearLayout>
 

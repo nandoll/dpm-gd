@@ -16,6 +16,7 @@ import android.widget.Toast;
 
 import com.google.android.material.navigation.NavigationView;
 
+import pe.com.mipredio.classes.SidebarClass;
 import pe.com.mipredio.utils.Tools;
 
 public class RouteAssignActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
@@ -23,12 +24,13 @@ public class RouteAssignActivity extends AppCompatActivity implements Navigation
     private DrawerLayout drawer;
     private Toolbar toolbar;
     private ActionBar actionBar;
+    private View viewMainContent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_route_assign);
-
+        viewMainContent = (View) findViewById(R.id.drawer_layout);
         initToolbar();
         initNavigationMenu();
 
@@ -63,29 +65,6 @@ public class RouteAssignActivity extends AppCompatActivity implements Navigation
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()) {
-
-            case R.id.menuPersonList:
-                Intent intentPerson = new Intent(RouteAssignActivity.this, TechnicalProfessionalListActivity.class);
-                startActivity(intentPerson);
-                break;
-            case R.id.menuTaskList:
-                Intent intent = new Intent(RouteAssignActivity.this, TaskListActivity.class);
-                startActivity(intent);
-                break;
-            case R.id.menuDashboard:
-                Intent intentChart = new Intent(RouteAssignActivity.this, ChartActivity.class);
-                startActivity(intentChart);
-                break;
-            case R.id.menuImportRoute:
-                Intent intentRoute = new Intent(RouteAssignActivity.this, RouteAssignActivity.class);
-                startActivity(intentRoute);
-                break;
-            case R.id.menuLogout:
-                Toast.makeText(this, "Salir App", Toast.LENGTH_SHORT).show();
-                break;
-        }
-        drawer.closeDrawer(GravityCompat.START);
-        return true;
+        return SidebarClass.actionSidebarMenu(item, this, viewMainContent, drawer);
     }
 }

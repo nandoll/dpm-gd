@@ -2,12 +2,6 @@
 <menu
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android">
-    <!--
-    <item
-        android:id="@+id/menuProfile"
-        android:icon="@drawable/ic_person_outline_24"
-        android:title="Mi Cuenta"></item>
-    -->
 
     <item
         android:id="@+id/menuPersonList"
@@ -28,8 +22,6 @@
         android:id="@+id/menuDashboard"
         android:icon="@drawable/ic_bar_chart_24"
         android:title="Dashboard"></item>
-
-
 
     <item
         android:id="@+id/menuLogout"

@@ -25,7 +25,8 @@ function validateAccess($roles, $jwt) : bool
 
     $rolmodel = new Rol();
     // $rol = $rolmodel->find($jwt->data->rol);
-    $rol = $rolmodel->where('nombres',$jwt->data->rol)->first();
+    // $rol = $rolmodel->where('nombres',$jwt->data->rol)->first();
+    $rol = $rolmodel->where('nombres',$jwt->_rol)->first();
     if ($rol == null) :
         return false;
     endif;

@@ -32,6 +32,7 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 
+import pe.com.mipredio.classes.SidebarClass;
 import pe.com.mipredio.utils.Tools;
 
 public class ChartActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
@@ -154,29 +155,7 @@ public class ChartActivity extends AppCompatActivity implements NavigationView.O
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.menuPersonList:
-                Intent intentPerson = new Intent(ChartActivity.this, TechnicalProfessionalListActivity.class);
-                startActivity(intentPerson);
-                break;
-            case R.id.menuTaskList:
-                Intent intentTask = new Intent(ChartActivity.this, TaskListActivity.class);
-                startActivity(intentTask);
-                break;
-            case R.id.menuDashboard:
-                Intent intentChart = new Intent(ChartActivity.this, ChartActivity.class);
-                startActivity(intentChart);
-                break;
-            case R.id.menuImportRoute:
-                Intent intentRoute = new Intent(ChartActivity.this, RouteAssignActivity.class);
-                startActivity(intentRoute);
-                break;
-            case R.id.menuLogout:
-                Toast.makeText(this, "Salir App", Toast.LENGTH_SHORT).show();
-                break;
-        }
-        drawer.closeDrawer(GravityCompat.START);
-        return true;
+        return SidebarClass.actionSidebarMenu(item, this, viewMainContent, drawer);
     }
 
     public void initChartBar() {

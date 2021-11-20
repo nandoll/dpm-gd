@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import pe.com.mipredio.model.TaskModel;
+import pe.com.mipredio.utils.Consts;
 import pe.com.mipredio.utils.Tools;
 
 public class TaskAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
@@ -32,8 +33,8 @@ public class TaskAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private List<TaskModel> mTask = new ArrayList<>();
     private OnTaskListener mOnTaskListener;
 
-    public TaskAdapter(List<TaskModel> mNotes, OnTaskListener onTaskListener) {
-        this.mTask = mNotes;
+    public TaskAdapter(List<TaskModel> mTask, OnTaskListener onTaskListener) {
+        this.mTask = mTask;
         this.mOnTaskListener = onTaskListener;
     }
 
@@ -47,19 +48,42 @@ public class TaskAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
+
         if (holder instanceof ViewHolder) {
+
             TaskModel p = this.mTask.get(position);
             ViewHolder view = (ViewHolder) holder;
-            view.textViewStatus.setText( p.getEstado().toUpperCase() );
-            if(p.getEstado().equals(Tools._STATUS_SEND)){
-                view.imageViewStatus.setImageResource(Tools._IMG_SEND);
-                view.imageViewStatus.setColorFilter( ContextCompat.getColor( view.itemView.getContext(), Tools._COLOR_SEND) );
-            }else if( p.getEstado().equals(Tools._STATUS_PENDING) ){
-                view.imageViewStatus.setImageResource(Tools._IMG_PENDING);
-                view.imageViewStatus.setColorFilter( ContextCompat.getColor( view.itemView.getContext(), Tools._COLOR_PENDING) );
-            }else if( p.getEstado().equals(Tools._STATUS_REGISTER) ){
-                view.imageViewStatus.setImageResource(Tools._IMG_REGISTER);
-                view.imageViewStatus.setColorFilter( ContextCompat.getColor( view.itemView.getContext(), Tools._COLOR_REGISTER) );
+            view.textViewStatus.setText(p.getEstado().toUpperCase());
+            view.textViewMedidor.setText(p.getNroMedidor());
+            view.textViewUbigeo.setText(p.getUbigeo());
+            view.textViewDireccion.setText(p.getDireccion());
+
+            if(!p.getEstado().equals(Consts._STATUS_PENDING)){
+                view.textViewHora.setText( p.getHoraRegistro() ); // Hora en la que el técnico ha llenado la actividad
+                view.textViewHora.setVisibility(View.VISIBLE);
+            }
+
+            /*
+            if (p.getEstado().equals(Consts._STATUS_SEND)) {
+                view.imageViewStatus.setImageResource(Consts._IMG_SEND);
+                view.imageViewStatus.setColorFilter(ContextCompat.getColor(view.itemView.getContext(), Consts._COLOR_SEND));
+                view.textViewSituacion.setVisibility(View.VISIBLE);
+
+            }
+            */
+            if (p.getEstado().equals(Consts._STATUS_PENDING)) {
+                view.imageViewStatus.setImageResource(Consts._IMG_PENDING);
+                view.imageViewStatus.setColorFilter(ContextCompat.getColor(view.itemView.getContext(), Consts._COLOR_PENDING));
+            } else if (p.getEstado().equals(Consts._STATUS_REGISTER)) {
+                view.imageViewStatus.setImageResource(Consts._IMG_REGISTER);
+                view.imageViewStatus.setColorFilter(ContextCompat.getColor(view.itemView.getContext(), Consts._COLOR_REGISTER));
+            }
+
+            Log.e("ENVIADO",p.getSituacion());
+
+            if (p.getSituacion().equals(Consts._STATUS_SEND)) {
+                view.textViewSituacion.setVisibility(View.VISIBLE);
+                Log.e("ENVIADO","ok");
             }
 
         }
@@ -79,15 +103,18 @@ public class TaskAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         // TextView timestamp, title;
         // Button buttonStatus;
         ImageView imageViewStatus;
-        TextView textViewStatus;
+        TextView textViewStatus, textViewMedidor, textViewUbigeo, textViewDireccion, textViewHora, textViewSituacion;
         OnTaskListener mOnTaskListener;
 
         public ViewHolder(View itemView, OnTaskListener onTaskListener) {
             super(itemView);
-            //timestamp = itemView.findViewById(R.id.note_timestamp);
-            //title = itemView.findViewById(R.id.note_title);
             textViewStatus = (TextView) itemView.findViewById(R.id.textViewStatus);
             imageViewStatus = (ImageView) itemView.findViewById(R.id.imageViewStatus);
+            textViewMedidor = (TextView) itemView.findViewById(R.id.medidor);
+            textViewUbigeo = (TextView) itemView.findViewById(R.id.ubigeo);
+            textViewDireccion = (TextView) itemView.findViewById(R.id.direccion);
+            textViewHora = (TextView) itemView.findViewById(R.id.hora) ;
+            textViewSituacion = (TextView) itemView.findViewById(R.id.situacion);
             mOnTaskListener = onTaskListener;
             itemView.setOnClickListener(this);
         }

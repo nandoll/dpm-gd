@@ -2,10 +2,13 @@ package pe.com.mipredio;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Activity;
+import android.app.ListActivity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ProgressBar;
@@ -16,11 +19,16 @@ import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
 
 
+import org.json.JSONException;
+
 import pe.com.mipredio.api.ApiClient;
+import pe.com.mipredio.classes.TokenClass;
 import pe.com.mipredio.request.LoginRequest;
 import pe.com.mipredio.response.ErrorResponse;
 import pe.com.mipredio.response.ErrorUtils;
 import pe.com.mipredio.response.LoginResponse;
+import pe.com.mipredio.utils.Consts;
+import pe.com.mipredio.utils.SharedPreference;
 import pe.com.mipredio.utils.Tools;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -28,18 +36,23 @@ import retrofit2.Response;
 
 public class LoginActivity extends AppCompatActivity {
     private MaterialButton loginBtn;
-    private TextView textViewEnterOff;
+    private MaterialButton materialButtonEnterOff;
     private ProgressBar progress_bar;
 
     private TextInputEditText editTextCorreo;
     private TextInputEditText editTextPassword;
 
+    private View viewMainContent;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        viewMainContent = findViewById(R.id.main_content);
+
         loginBtn = (MaterialButton) findViewById(R.id.loginIn);
-        textViewEnterOff = (TextView) findViewById(R.id.enterOff);
+        materialButtonEnterOff = (MaterialButton) findViewById(R.id.enterOff);
         progress_bar = (ProgressBar) findViewById(R.id.progress_bar);
 
         editTextCorreo = (TextInputEditText) findViewById(R.id.textMail);
@@ -52,10 +65,12 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
-        textViewEnterOff.setOnClickListener(new View.OnClickListener() {
+        materialButtonEnterOff.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                SharedPreference.setDefaultsPreference(Consts.LOGIN_MODE, "anonymous", LoginActivity.this);
+                startActivity(new Intent(LoginActivity.this, TaskListActivity.class));
+                finish();
             }
         });
 
@@ -76,42 +91,32 @@ public class LoginActivity extends AppCompatActivity {
         }
 
         LoginRequest loginRequest = new LoginRequest();
-        loginRequest.setCorreo(editTextCorreo.getText().toString());
-        loginRequest.setContrasena(editTextPassword.getText().toString());
+        loginRequest.setUsername(editTextCorreo.getText().toString());
+        loginRequest.setPassword(editTextPassword.getText().toString());
 
         inicioSesion(loginRequest);
-        /*
-        progress_bar.setVisibility(View.VISIBLE);
-        loginBtn.setAlpha(0f);
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                progress_bar.setVisibility(View.GONE);
-                loginBtn.setAlpha(1f);
-            }
-        }, 1000);
-
-        Intent intent = new Intent(getApplicationContext(), TaskListActivity.class);
-        startActivity(intent);
-        */
     }
 
     public void inicioSesion(LoginRequest loginRequest) {
         loginBtn.setAlpha(0f);
+        progress_bar.setVisibility(View.VISIBLE);
 
         Call<LoginResponse> loginResponseCall = ApiClient.getLoginService().loginPersona(loginRequest);
         loginResponseCall.enqueue(new Callback<LoginResponse>() {
             @Override
             public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
-
-                progress_bar.setVisibility(View.GONE);
                 loginBtn.setAlpha(1f);
-
+                progress_bar.setVisibility(View.GONE);
                 if (response.isSuccessful()) {
-                    startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                    // TokenClass tokenClass = null;
+                    // tokenClass = new TokenClass(response.body().getToken());
+                    SharedPreference.setDefaultsPreference(Consts.LOGIN_MODE,"account", LoginActivity.this);
+                    SharedPreference.setDefaultsPreference(Consts.TOKEN, response.body().getToken() , LoginActivity.this );
+                    startActivity(new Intent(LoginActivity.this, TaskListActivity.class));
+                    finish();
                 } else {
                     ErrorResponse error = ErrorUtils.parseError(response);
-                    Toast.makeText(LoginActivity.this, "" + error.getMessages().getError(), Toast.LENGTH_SHORT).show();
+                    Tools.snackBarWithIconError(LoginActivity.this, viewMainContent, error.getMessages().getError());
                 }
             }
 
@@ -124,7 +129,6 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
     }
-
 
 
     private void initToolbar() {

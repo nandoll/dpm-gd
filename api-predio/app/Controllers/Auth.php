@@ -58,13 +58,19 @@ class Auth extends BaseController
 		$payload = array(
 			"aud" => base_url(),
 			"iat" => $time,
-			// "exp" => $time + 60,
 			"exp" => $time + 3600,
-			"data" => array(
-				"nombre" => $usuario["nombres"],
-				"username" => $usuario["correo"],
-				"rol" => $usuario["rol"]
-			)
+			
+			"_nombre" => $usuario["nombres"],
+			"_username" => $usuario["correo"],
+			"_rol" => $usuario["rol"],
+			"_especialidad" => $usuario["especialidad"]
+
+			// "data" => array(
+			// 	"nombre" => $usuario["nombres"],
+			// 	"username" => $usuario["correo"],
+			// 	"rol" => $usuario["rol"],
+			// 	"especialidad" => $usuario["especialidad"],
+			// )
 		);
 		$jwt = JWT::encode($payload, $key);
 		return $jwt;

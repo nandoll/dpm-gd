@@ -5,6 +5,7 @@ import android.app.Application;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
@@ -12,6 +13,7 @@ import android.os.Build;
 import android.text.Layout;
 import android.util.Patterns;
 import android.view.Gravity;
+import android.view.Menu;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -29,6 +31,7 @@ import com.bumptech.glide.Glide;
 // import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.target.BitmapImageViewTarget;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
 
 import org.w3c.dom.Text;
@@ -39,25 +42,8 @@ import java.util.Date;
 import pe.com.mipredio.R;
 
 public class Tools{
-    public static final String _STATUS_REGISTER = "registrado";
-    public static final int _COLOR_REGISTER = R.color.teal_500;
-    public static final int _IMG_REGISTER = R.drawable.ic_done_all_24;
-
-    public static final String _STATUS_PENDING = "pediente";
-    public static final int _COLOR_PENDING = R.color.grey_400;
-    public static final int _IMG_PENDING= R.drawable.ic_done_24;
-
-    public static final String _STATUS_SEND = "enviado";
-    public static final int _COLOR_SEND = R.color.teal_500;
-    public static final int _IMG_SEND= R.drawable.ic_send_24;
-
-    // Notifications ID
-    public  static  final  int NOTIFICATION_CLOSE_DAY = 1;
-
-    public static final  String BREAK_LINE = "\n";
 
     static ProgressDialog progressDialog;
-
 
     public static void setSystemBarColor(Activity act) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -95,6 +81,7 @@ public class Tools{
         } catch (Exception e) {
         }
     }
+
     // Snackbar
     public static void snackBarWithIconSuccess(Activity activity, View contentView, String text) {
         final Snackbar snackbar = Snackbar.make(contentView, "", Snackbar.LENGTH_SHORT);
@@ -110,6 +97,22 @@ public class Tools{
         snackBarView.addView(custom_view, 0);
         snackbar.show();
     }
+    public static void snackBarWithIconError(Activity activity, View contentView, String text) {
+        final Snackbar snackbar = Snackbar.make(contentView, "", Snackbar.LENGTH_SHORT);
+        //inflate view
+        View custom_view = activity.getLayoutInflater().inflate(R.layout.snackbar_icon_text, null);
+
+        snackbar.getView().setBackgroundColor(Color.TRANSPARENT);
+        Snackbar.SnackbarLayout snackBarView = (Snackbar.SnackbarLayout) snackbar.getView();
+        snackBarView.setPadding(0, 0, 0, 0);
+
+        ((TextView) custom_view.findViewById(R.id.message)).setText(text);
+        ((ImageView) custom_view.findViewById(R.id.icon)).setImageResource(R.drawable.ic_close_24);
+        (custom_view.findViewById(R.id.parent_view)).setBackgroundColor(activity.getResources().getColor(R.color.red_600));
+        snackBarView.addView(custom_view, 0);
+        snackbar.show();
+    }
+
     // Google Map
     public static GoogleMap configActivityMaps(GoogleMap googleMap) {
         // set map type
@@ -174,6 +177,7 @@ public class Tools{
     public static void dismissProgressDialog(ProgressDialog progressDialog){
         progressDialog.dismiss();
     }
+
 
 
 }

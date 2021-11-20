@@ -6,7 +6,7 @@ import java.util.List;
 
 public class TaskModel {
 
-    private int id;
+    private String id;
     private String direccion;
     private String contacto;
     private String latitud;
@@ -19,20 +19,25 @@ public class TaskModel {
     private String ubigeo;
     private String estado; // registrado, pediente, enviado
     private String personalId;
+    private String nroMedidor;
+    private String situacion;
 
-    public TaskModel(int id, String direccion, String fechaRegistro, String horaRegistro, String ubigeo, String estado) {
+    public TaskModel(String id, String direccion, String fechaRegistro, String horaRegistro, String ubigeo, String estado, String nroMedidor, String situacion) {
         this.id = id;
         this.direccion = direccion;
         this.fechaRegistro = fechaRegistro;
         this.horaRegistro = horaRegistro;
         this.ubigeo = ubigeo;
         this.estado = estado;
+        this.nroMedidor = nroMedidor;
+        this.situacion = situacion;
     }
 
     public TaskModel(){
 
     }
-    public TaskModel(int id, String direccion, String contacto, String latitud, String longitud, String nroDocumento, String medicion, String observacioj, String fechaRegistro, String horaRegistro, String ubigeo, String estado, String personalId) {
+
+    public TaskModel(String id, String direccion, String contacto, String latitud, String longitud, String nroDocumento, String medicion, String observacioj, String fechaRegistro, String horaRegistro, String ubigeo, String estado, String personalId, String nroMedidor, String situacion) {
         this.id = id;
         this.direccion = direccion;
         this.contacto = contacto;
@@ -46,13 +51,31 @@ public class TaskModel {
         this.ubigeo = ubigeo;
         this.estado = estado;
         this.personalId = personalId;
+        this.nroMedidor = nroMedidor;
+        this.situacion = situacion;
     }
 
-    public int getId() {
+    public String getSituacion() {
+        return situacion;
+    }
+
+    public void setSituacion(String situacion) {
+        this.situacion = situacion;
+    }
+
+    public String getNroMedidor() {
+        return nroMedidor;
+    }
+
+    public void setNroMedidor(String nroMedidor) {
+        this.nroMedidor = nroMedidor;
+    }
+
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 

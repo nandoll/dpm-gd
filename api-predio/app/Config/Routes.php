@@ -37,18 +37,21 @@ $routes->post('/auth/login', 'Auth::login');
 $routes->group('api',['namespace'=>'App\Controllers\api','filter'=>'authFilter'] , function($routes){
     $routes->group('predios',function($routes){
         $routes->post('/create','Predios::create');
-        $routes->get('nro/(:num)', 'Predios::getObtenerPorNro/$1');
+        $routes->post('getByNumber/(:num)', 'Predios::getByNumber/$1');
     });
-    $routes->group('programaciones',function($routes){
-        $routes->post('/create','Programaciones::create');
-        $routes->get('fecha/mapa','Programaciones::getObtenerPorFechaMapa/$1');
-        $routes->get('fecha/(:any)','Programaciones::getObtenerPorFecha/$1');
-        $routes->get('fecha','Programaciones::getObtenerPorFecha');        
-        $routes->put('validar','Programaciones::completarActividad');
+    $routes->group('actividad',function($routes){
+        $routes->put('update/:id','Programaciones::update/$1');
+        $routes->post('create','Programaciones::create');
+        $routes->post('getByDateAndMap','Programaciones::getByDateAndMap/$1');
+        $routes->post('getByDate/(:any)','Programaciones::getByDate/$1');
+        $routes->post('getByDate','Programaciones::getByDate');
+        $routes->put('fillActivity','Programaciones::fillActivity');
         $routes->post('/upload/(:codigo)', 'Programaciones::upload/$1');
+        $routes->get('getById/:id','Programaciones::getById/$1');
+        $routes->put('dayClose/','Programaciones::dayClose');
     });
-    $routes->group('personas',function($routes){
-        $routes->get('tecnicos','Personas::getObtenerTecnicos');
+    $routes->group('people',function($routes){
+        $routes->post('technicians','Personas::technicians');
     });
     
 });

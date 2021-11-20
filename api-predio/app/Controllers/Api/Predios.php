@@ -94,7 +94,7 @@ class Predios extends ResourceController
         //
     }
 
-    public function getObtenerPorNro($nro=null){
+    public function getByNumber($nro=null){
         $predio = new Predio();
         $data = $predio->where(['nroMedidor'=>$nro])->first() ;
         if($data == null){

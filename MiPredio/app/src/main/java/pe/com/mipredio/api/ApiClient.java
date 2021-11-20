@@ -3,6 +3,7 @@ package pe.com.mipredio.api;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import pe.com.mipredio.services.LoginService;
+import pe.com.mipredio.services.ProgramacionService;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
@@ -18,7 +19,7 @@ public class ApiClient {
         Retrofit retrofit = new Retrofit.Builder()
                 .addConverterFactory(GsonConverterFactory.create())
                 // .baseUrl("http://localhost:8080/api/")
-                .baseUrl("http://127.0.0.1/api/")
+                .baseUrl("http://issadent.generics-pharm.pl/public/")
                 .client(okHttpClient)
                 .build();
         return retrofit;
@@ -27,6 +28,11 @@ public class ApiClient {
     public static LoginService getLoginService(){
         LoginService loginService = getRetrofit().create(LoginService.class);
         return loginService;
+    }
+
+    public  static ProgramacionService getProgramacionService(){
+        ProgramacionService personaService = getRetrofit().create(ProgramacionService.class);
+        return personaService;
     }
 
     

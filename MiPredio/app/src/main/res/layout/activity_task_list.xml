@@ -82,9 +82,8 @@
                 android:layout_height="wrap_content"
                 android:text="Lista de Predios"
                 android:textAppearance="@style/TextAppearance.AppCompat.Caption"
-                android:textStyle="bold"
                 android:textColor="@color/grey_800"
-                />
+                android:textStyle="bold" />
 
             <View
                 android:layout_width="match_parent"

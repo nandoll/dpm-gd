@@ -18,6 +18,7 @@ import java.util.Map;
 
 import pe.com.mipredio.MainActivity;
 import pe.com.mipredio.R;
+import pe.com.mipredio.utils.Consts;
 import pe.com.mipredio.utils.Tools;
 
 public class MyFirebaseMessageService extends FirebaseMessagingService {
@@ -55,7 +56,7 @@ public class MyFirebaseMessageService extends FirebaseMessagingService {
                 remoteMessage.getNotification().getTitle(),
                 remoteMessage.getNotification().getBody(),
                 pendingIntent, true, R.drawable.login_logo);
-        oreoNotification.getManager().notify(Tools.NOTIFICATION_CLOSE_DAY, builder.build());
+        oreoNotification.getManager().notify(Consts.NOTIFICATION_CLOSE_DAY, builder.build());
     }
 
 

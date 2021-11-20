@@ -21,6 +21,7 @@ import com.google.android.material.navigation.NavigationView;
 import java.util.ArrayList;
 import java.util.List;
 
+import pe.com.mipredio.classes.SidebarClass;
 import pe.com.mipredio.model.TechnicalProfessionalModel;
 import pe.com.mipredio.utils.Tools;
 
@@ -36,12 +37,13 @@ public class TechnicalProfessionalListActivity
     private NavigationView nav_view;
     private DrawerLayout drawer;
     private TechnicalProfessionalListAdapter mTechnicalProfessionalListAdapter;
+    private  View viewMainContent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_technical_professional_list);
-
+        viewMainContent = (View) findViewById(R.id.drawer_layout);
         initToolbar();
         initNavigationMenu();
         initTechnicalProfessional();
@@ -112,30 +114,7 @@ public class TechnicalProfessionalListActivity
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()) {
-
-            case R.id.menuPersonList:
-                Intent intentPerson = new Intent(TechnicalProfessionalListActivity.this, TechnicalProfessionalListActivity.class);
-                startActivity(intentPerson);
-                break;
-            case R.id.menuTaskList:
-                Intent intent = new Intent(TechnicalProfessionalListActivity.this, TaskListActivity.class);
-                startActivity(intent);
-                break;
-            case R.id.menuDashboard:
-                Intent intentChart = new Intent(TechnicalProfessionalListActivity.this, ChartActivity.class);
-                startActivity(intentChart);
-                break;
-            case R.id.menuImportRoute:
-                Intent intentRoute = new Intent(TechnicalProfessionalListActivity.this, RouteAssignActivity.class);
-                startActivity(intentRoute);
-                break;
-            case R.id.menuLogout:
-                Toast.makeText(this, "Salir App", Toast.LENGTH_SHORT).show();
-                break;
-        }
-        drawer.closeDrawer(GravityCompat.START);
-        return true;
+        return SidebarClass.actionSidebarMenu(item, this, viewMainContent, drawer);
     }
 
 

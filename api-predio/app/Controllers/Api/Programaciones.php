@@ -5,6 +5,7 @@ namespace App\Controllers\Api;
 use App\Models\Persona;
 use App\Models\Programacion;
 use CodeIgniter\RESTful\ResourceController;
+use PhpParser\Node\Expr\FuncCall;
 
 class Programaciones extends ResourceController
 {
@@ -26,7 +27,6 @@ class Programaciones extends ResourceController
     {
         //
     }
-
     /**
      * Return the properties of a resource object
      *
@@ -36,7 +36,6 @@ class Programaciones extends ResourceController
     {
         //
     }
-
     /**
      * Return a new resource object, with default properties
      *
@@ -46,7 +45,6 @@ class Programaciones extends ResourceController
     {
         //
     }
-
     /**
      * Create a new resource object, from "posted" parameters
      *
@@ -71,17 +69,14 @@ class Programaciones extends ResourceController
 			return $this->failServerError('Ha ocurrido un error en el servidor' . $e);
 		}
     }
-
     /**
      * Return the editable properties of a resource object
      *
      * @return mixed
      */
     public function edit($id = null)
-    {
-        //
+    {        
     }
-
     /**
      * Add or update a model resource, from "posted" properties
      *
@@ -89,9 +84,22 @@ class Programaciones extends ResourceController
      */
     public function update($id = null)
     {
-        //
+        try {
+			$json = $this->request->getJSON();
+            if($json == null){
+                return $this->fail("No hay información de envío");
+            }
+            $json->hora = date("d/m/Y h:i:s");
+            $json->estado = STATUS_COMPLETE;
+			if ($this->model->update($id,$json)) :
+                return $this->respondCreated($json);
+			else :
+				return $this->failValidationErrors($this->model->validation->listErrors());
+			endif;
+		} catch (\Exception $e) {
+			return $this->failServerError('Ha ocurrido un error en el servidor' . $e);
+		}
     }
-
     /**
      * Delete the designated resource object from the model
      *
@@ -101,11 +109,10 @@ class Programaciones extends ResourceController
     {
         //
     }
-
     /**
      * Obtiene las programaciones por fecha del técnico
      */
-    public function getObtenerPorFecha($tecnico=null){
+    public function getByDate($tecnico=null){
         $fecha  = $this->request->getVar("fecha");
         if(!isValidDate($fecha)){
             return $this->fail("La fecha no tiene un formato válido");
@@ -113,14 +120,15 @@ class Programaciones extends ResourceController
 
         $jwt = getHeader($this->request);
         $persona = new Persona();
-        $personaData = $persona->asObject()->where("correo",$jwt->data->username)->first();
+        // $personaData = $persona->asObject()->where("correo",$jwt->data->username)->first();
+        $personaData = $persona->asObject()->where("correo",$jwt->_username)->first();
         $id = $personaData->id;
 
         $programacion = new Programacion();
                 
         if(validateAccess( array('jefe') , $jwt )){
             
-            $data = $programacion->select('programaciones.id, hora, nroMedidor, ubigeo, direccion, estado ')
+            $data = $programacion->select('programaciones.id, hora, nroMedidor, ubigeo, direccion, estado, DATE_FORMAT(fecha,"%d/%m/%Y") fecha, situacion ')
             ->join('predios','programaciones.idPredio=predios.id')
             ->where("fecha",$fecha)
             ->where("idPersona",$tecnico)
@@ -129,7 +137,7 @@ class Programaciones extends ResourceController
 
         }else{
 
-            $data = $programacion->select('programaciones.id, hora, nroMedidor, ubigeo, direccion, estado ')
+            $data = $programacion->select('programaciones.id, hora, nroMedidor, ubigeo, direccion, estado , DATE_FORMAT(fecha,"%d/%m/%Y") fecha, situacion ')
             ->join('predios','programaciones.idPredio=predios.id')
             ->where("fecha",$fecha)
             ->where("idPersona",$id)
@@ -139,11 +147,10 @@ class Programaciones extends ResourceController
         }               
         return $this->respond($data);
     }
-
     /**
      * Obtiene las coordenadas de las programaciones
      */
-    public function getObtenerPorFechaMapa($tecnico=null){
+    public function getByDateAndMap($tecnico=null){
         $fecha  = $this->request->getVar("fecha");
         if(!isValidDate($fecha)){
             return $this->fail("La fecha no tiene un formato válido");
@@ -151,7 +158,8 @@ class Programaciones extends ResourceController
 
         $jwt = getHeader($this->request);
         $persona = new Persona();
-        $personaData = $persona->asObject()->where("correo",$jwt->data->username)->first();
+        // $personaData = $persona->asObject()->where("correo",$jwt->data->username)->first();
+        $personaData = $persona->asObject()->where("correo",$jwt->_username)->first();
         $id = $personaData->id;
 
         $programacion = new Programacion();
@@ -177,15 +185,14 @@ class Programaciones extends ResourceController
         }               
         return $this->respond($data);
     }
-
     /**
      * Completar actividad  por el tecnico de la programación que se le a asignado
      */
-    public function completarActividad(){
+    public function fillActivity(){
         $dataJSON = $this->request->getJSON();
         $jwt = getHeader($this->request);
         $persona = new Persona();
-        $personaData = $persona->asObject()->where("correo",$jwt->data->username)->first();
+        $personaData = $persona->asObject()->where("correo",$jwt->_username)->first();
         $id = $personaData->id;
 
         $programacion = new Programacion();
@@ -213,7 +220,6 @@ class Programaciones extends ResourceController
          */
         // return $this->respond($programacion);
     }
-
     /**
      * Cargar imagen
      */
@@ -230,6 +236,41 @@ class Programaciones extends ResourceController
             ),"Archivo ha sido actualizado");
         } else {
             return $this->fail("Error al cargar el archivo");
+        }
+    }
+    /** 
+     * 
+     */
+    public function getById(Int $id)
+    {
+        $programacion = new Programacion();
+        $data = $programacion->asObject()->select('foto, direccion, idPredio,  contactoNombre nombres, contactoApellido apellidos , IF(programaciones.latitud="",predios.latitud,programaciones.latitud) latitud, IF(programaciones.longitud="",predios.longitud,programaciones.longitud) longitud, dni, medicion, comentario ')
+            ->join('predios','programaciones.idPredio=predios.id')
+            ->where("programaciones.id",$id)
+            ->first();
+        $predioId = $data->idPredio;
+        $dataAnt = $programacion->asObject()->where("idPredio",$predioId)->where("id<",$id)->orderBy('fecha','desc')->first();
+        $medicionAnt = "No hay";
+        if($dataAnt){
+            $medicionAnt = $dataAnt->medicion;
+        }
+        $data->medicion_ant = $medicionAnt;      
+        return $this->respond($data);
+    }
+
+    public function dayClose(){
+        $dataJSON = $this->request->getJSON(); // { Fecha }
+        if($dataJSON->fecha){
+            $dataJSON->situacion = STATUS_SEND;
+            if($this->model->where("fecha",$dataJSON->fecha)
+            ->set(["situacion"=>STATUS_SEND])->update()){
+                return $this->respondCreated($dataJSON);
+            }else{
+                return $this->failValidationErrors($this->model->validation->listErrors());
+            }
+            return $this->respond($dataJSON);
+        }else{
+            return $this->fail("No hay información de envío");
         }
     }
 

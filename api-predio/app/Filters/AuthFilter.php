@@ -45,7 +45,9 @@ class AuthFilter implements FilterInterface
             $jwt = JWT::decode($authHeader,$key, array('HS256'));
 			$rolmodel = new Rol();
             // $rol = $rolmodel->find($jwt->data->rol);
-            $rol = $rolmodel->where('nombres',$jwt->data->rol)->first();
+            // $rol = $rolmodel->where('nombres',$jwt->data->rol)->first();
+            $rol = $rolmodel->where('nombres',$jwt->_rol)->first();
+
 			if ($rol == null) :
 				return Services::response()->setStatusCode(ResponseInterface::HTTP_UNAUTHORIZED, 'El Rol de JWT no es válido');
 			endif;

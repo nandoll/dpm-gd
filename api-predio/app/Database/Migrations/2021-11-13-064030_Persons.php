@@ -32,10 +32,6 @@ class Persons extends Migration
                 'type' => 'VARCHAR',
                 'constraint' => '45'
             ],
-            'perfil' => [
-                'type' => 'VARCHAR',
-                'constraint' => '25'
-            ],
             'foto' => [
                 'type' => 'TEXT',
             ],
@@ -47,6 +43,10 @@ class Persons extends Migration
             ],
             'rol_id' => [
                 'type' => 'INT',
+            ],
+            'especialidad' => [
+                'type' => 'VARCHAR',
+                'constraint' => '75'
             ],                        
             'created_at datetime default current_timestamp',
             'updated_at datetime default current_timestamp on update current_timestamp'

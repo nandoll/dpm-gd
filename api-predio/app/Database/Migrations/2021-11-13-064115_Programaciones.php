@@ -49,6 +49,10 @@ class Programaciones extends Migration
                 'type' => 'VARCHAR',
                 'constraint' => '25'
             ],
+            'situacion' => [
+                'type' => 'VARCHAR',
+                'constraint' => '25'
+            ],
                         
             'created_at datetime default current_timestamp',
             'updated_at datetime default current_timestamp on update current_timestamp'
