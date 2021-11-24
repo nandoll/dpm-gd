@@ -32,7 +32,6 @@
 
         </com.google.android.material.appbar.AppBarLayout>
 
-
         <!-- Contenido -->
         <LinearLayout
             android:layout_width="match_parent"
@@ -90,16 +89,32 @@
                 android:layout_height="@dimen/spacing_large" />
 
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recyclerView"
+            <include
+                android:id="@+id/viewNoResult"
+                layout="@layout/no_activity_result"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:scrollbars="vertical"
-                android:scrollingCache="true" />
+                android:layout_gravity="center"
+                android:visibility="gone"
+                />
+
+            <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+                android:id="@+id/swipe_refresh_layout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recyclerView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scrollbars="vertical"
+                    android:scrollingCache="true" />
+
+            </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
         </LinearLayout>
-
         <!-- Contenido -->
-
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/btnaddTask"
@@ -115,10 +130,7 @@
             app:elevation="4dp"
             app:tint="@color/colorWhite" />
 
-
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
-
-
     <!--navigation drawer menu-->
     <com.google.android.material.navigation.NavigationView
         android:id="@+id/nav_view"
@@ -127,10 +139,6 @@
         android:layout_gravity="start"
         android:fitsSystemWindows="false"
         app:headerLayout="@layout/sidebar_header"
-        app:menu="@menu/menu_sidebar"
-
-        />
-
-
+        app:menu="@menu/menu_sidebar" />
 </androidx.drawerlayout.widget.DrawerLayout>
 

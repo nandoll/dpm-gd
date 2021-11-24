@@ -5,12 +5,14 @@ import android.app.Application;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.text.Layout;
+import android.util.Log;
 import android.util.Patterns;
 import android.view.Gravity;
 import android.view.Menu;
@@ -27,6 +29,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.drawable.RoundedBitmapDrawable;
 import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory;
 
+import com.auth0.android.jwt.JWT;
 import com.bumptech.glide.Glide;
 // import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.target.BitmapImageViewTarget;
@@ -39,9 +42,11 @@ import org.w3c.dom.Text;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import pe.com.mipredio.LoginActivity;
 import pe.com.mipredio.R;
+import pe.com.mipredio.classes.SidebarClass;
 
-public class Tools{
+public class Tools {
 
     static ProgressDialog progressDialog;
 
@@ -53,6 +58,7 @@ public class Tools{
             window.setStatusBarColor(act.getResources().getColor(R.color.colorPrimaryDark));
         }
     }
+
     public static void setSystemBarColor(Activity act, @ColorRes int color) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             Window window = act.getWindow();
@@ -61,6 +67,7 @@ public class Tools{
             window.setStatusBarColor(act.getResources().getColor(color));
         }
     }
+
     public static void setSystemBarLight(Activity act) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             View view = act.findViewById(android.R.id.content);
@@ -68,6 +75,7 @@ public class Tools{
             view.setSystemUiVisibility(flags);
         }
     }
+
     public static void displayImageRound(final Context ctx, final ImageView img, @DrawableRes int drawable) {
         try {
             Glide.with(ctx).load(drawable).asBitmap().centerCrop().into(new BitmapImageViewTarget(img) {
@@ -112,6 +120,21 @@ public class Tools{
         snackBarView.addView(custom_view, 0);
         snackbar.show();
     }
+    public static void snackBarWithIconWarning(Activity activity, View contentView, String text) {
+        final Snackbar snackbar = Snackbar.make(contentView, "", Snackbar.LENGTH_SHORT);
+        //inflate view
+        View custom_view = activity.getLayoutInflater().inflate(R.layout.snackbar_icon_text, null);
+
+        snackbar.getView().setBackgroundColor(Color.TRANSPARENT);
+        Snackbar.SnackbarLayout snackBarView = (Snackbar.SnackbarLayout) snackbar.getView();
+        snackBarView.setPadding(0, 0, 0, 0);
+
+        ((TextView) custom_view.findViewById(R.id.message)).setText(text);
+        ((ImageView) custom_view.findViewById(R.id.icon)).setImageResource(R.drawable.ic_error_warning_24);
+        (custom_view.findViewById(R.id.parent_view)).setBackgroundColor(activity.getResources().getColor(R.color.yellow_200));
+        snackBarView.addView(custom_view, 0);
+        snackbar.show();
+    }
 
     // Google Map
     public static GoogleMap configActivityMaps(GoogleMap googleMap) {
@@ -138,6 +161,7 @@ public class Tools{
         SimpleDateFormat newFormat = new SimpleDateFormat("MMMM dd, yyyy");
         return newFormat.format(new Date(dateTime));
     }
+
     public static String getDateFullDayName(Long dateTime) {
         SimpleDateFormat newFormat = new SimpleDateFormat("EEEE");
         return newFormat.format(new Date(dateTime));
@@ -153,31 +177,61 @@ public class Tools{
         }
         return resultado;
     }
+
     // Alert
-    public static void showAlertDialog(Context context,String title, String description) {
+    public static void showAlertDialog(Context context, String title, String description) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setTitle(title);
         builder.setMessage(description);
         builder.setPositiveButton(R.string.btnOk, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.dismiss();
                 // Snackbar.make(parent_view, "Agree clicked", Snackbar.LENGTH_SHORT).show();
             }
         });
+
         builder.show();
     }
 
-    public static void showSaveProgressDialog(ProgressDialog progressDialog){
+
+    public static void showSaveProgressDialog(ProgressDialog progressDialog) {
         progressDialog.show();
         progressDialog.setContentView(R.layout.progress_dialog_saving);
         progressDialog.setCancelable(false);
         progressDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
     }
 
-    public static void dismissProgressDialog(ProgressDialog progressDialog){
+    public static void dismissProgressDialog(ProgressDialog progressDialog) {
         progressDialog.dismiss();
     }
 
-
+    public static void isExpireToken(Activity activity, Context context) {
+        String token = SharedPreference.getDefaultsPreference(Consts.TOKEN, activity);
+        if (token != null) {
+            JWT jwt = new JWT(token);
+            Date createdDate = new Date();
+            Long diff = jwt.getExpiresAt().getTime() - createdDate.getTime();
+            Log.e("EXPIRE_AT", diff.toString());
+            if (diff <= 0) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                builder.setTitle("Aviso");
+                builder.setMessage("La sesión ha expirado. Inicie sesión nuevamente");
+                builder.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                        SharedPreference.deleteSharePreference(activity);
+                        Intent intent = new Intent(activity, LoginActivity.class);
+                        context.startActivity(intent);
+                        activity.finish();
+                    }
+                });
+                AlertDialog dialog = builder.create();
+                dialog.setCanceledOnTouchOutside(false);
+                dialog.show();
+            }
+        }
+    }
 
 }

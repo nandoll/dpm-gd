@@ -108,8 +108,6 @@ public class LoginActivity extends AppCompatActivity {
                 loginBtn.setAlpha(1f);
                 progress_bar.setVisibility(View.GONE);
                 if (response.isSuccessful()) {
-                    // TokenClass tokenClass = null;
-                    // tokenClass = new TokenClass(response.body().getToken());
                     SharedPreference.setDefaultsPreference(Consts.LOGIN_MODE,"account", LoginActivity.this);
                     SharedPreference.setDefaultsPreference(Consts.TOKEN, response.body().getToken() , LoginActivity.this );
                     startActivity(new Intent(LoginActivity.this, TaskListActivity.class));

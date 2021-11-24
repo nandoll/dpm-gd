@@ -4,19 +4,7 @@
     <color name="colorPrimaryDark">#00796B</color>
     <color name="colorPrimaryLight">#B2DFDB</color>
     <color name="colorAccent">#607D8B</color>
-    <color name="colorAccentDark">#A5B5BD</color>
-    <color name="colorAccentLight">#D0D8DC</color>
     <color name="colorWhite">#FFFFFF</color>
-    <color name="colorBlack">#000000</color>
-    <color name="colorPrimaryText">#212121</color>
-    <color name="colorSecondaryText">#757575</color>
-    <color name="colorIcons">#FFFFFF</color>
-    <color name="colorDivider">#BDBDBD</color>
-
-    <color name="ucrop_color_toolbar">@color/teal_500</color>
-    <color name="ucrop_color_statusbar">@color/teal_700</color>
-    <color name="ucrop_color_widget_active">@color/teal_500</color>
-
 
 
     <color name="overlay_dark_5">#0C000000</color>
@@ -50,6 +38,9 @@
     <color name="grey_90">#263238</color>
     <color name="grey_95">#1a1a1a</color>
     <color name="grey_100_">#0d0d0d</color>
+
+
+    <!--Material color list from https://material.io/guidelines/style/color.html-->
 
     <color name="red_50">#FFEBEE</color>
     <color name="red_100">#FFCDD2</color>
@@ -327,4 +318,5 @@
     <color name="grey_800">#424242</color>
     <color name="grey_900">#212121</color>
     <color name="grey_1000">#1a1a1a</color>
+
 </resources>

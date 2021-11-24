@@ -58,10 +58,16 @@ public class ChartActivity extends AppCompatActivity implements NavigationView.O
         setContentView(R.layout.activity_chart);
         viewMainContent = findViewById(R.id.main_content);
         mChart = (BarChart) findViewById(R.id.bar_chart);
+
         initToolbar();
         initNavigationMenu();
         initChartBar();
+    }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Tools.isExpireToken(this, this);
     }
 
     private void initToolbar() {

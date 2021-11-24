@@ -1,11 +1,15 @@
 package pe.com.mipredio.request;
 
+import okhttp3.MultipartBody;
+
 public class TaskCompleteRequest {
 
     private String latitud;
     private String longitud;
     private String medicion;
     private String comentario;
+    // private MultipartBody.Part file; // El archivo a subir
+
 
     public String getLatitud() {
         return latitud;
@@ -38,4 +42,6 @@ public class TaskCompleteRequest {
     public void setComentario(String comentario) {
         this.comentario = comentario;
     }
+
+
 }

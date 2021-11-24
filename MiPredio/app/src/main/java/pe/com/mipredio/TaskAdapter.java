@@ -61,6 +61,9 @@ public class TaskAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             if(!p.getEstado().equals(Consts._STATUS_PENDING)){
                 view.textViewHora.setText( p.getHoraRegistro() ); // Hora en la que el técnico ha llenado la actividad
                 view.textViewHora.setVisibility(View.VISIBLE);
+            }else{
+                view.textViewHora.setText("");
+                view.textViewHora.setVisibility(View.GONE);
             }
 
             /*
@@ -79,12 +82,12 @@ public class TaskAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 view.imageViewStatus.setColorFilter(ContextCompat.getColor(view.itemView.getContext(), Consts._COLOR_REGISTER));
             }
 
-            Log.e("ENVIADO",p.getSituacion());
-
             if (p.getSituacion().equals(Consts._STATUS_SEND)) {
                 view.textViewSituacion.setVisibility(View.VISIBLE);
-                Log.e("ENVIADO","ok");
+            }else{
+                view.textViewSituacion.setVisibility(View.GONE);
             }
+
 
         }
     }

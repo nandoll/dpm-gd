@@ -25,8 +25,13 @@ public class TaskDetailActivity extends AppCompatActivity {
         viewMainContent = findViewById(R.id.main_content);
         imageButtonMap = findViewById(R.id.imageButtonMap);
         initToolbar();
-
         mapButton();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Tools.isExpireToken(this, this);
     }
 
     private void mapButton() {
@@ -34,7 +39,7 @@ public class TaskDetailActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(v.getContext(), TaskMapActivity.class);
-                intent.putExtra("taskId","999"); // Pasar el ID a la activity para mostrar solo 1 marcador de la Tarea
+                intent.putExtra("taskId", "999"); // Pasar el ID a la activity para mostrar solo 1 marcador de la Tarea
                 startActivity(intent);
             }
         });

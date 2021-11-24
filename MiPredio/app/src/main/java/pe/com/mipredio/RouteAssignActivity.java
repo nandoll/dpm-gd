@@ -33,8 +33,12 @@ public class RouteAssignActivity extends AppCompatActivity implements Navigation
         viewMainContent = (View) findViewById(R.id.drawer_layout);
         initToolbar();
         initNavigationMenu();
+    }
 
-
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Tools.isExpireToken(this, this);
     }
 
     private void initToolbar() {

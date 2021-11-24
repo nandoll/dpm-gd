@@ -71,6 +71,12 @@ public class TaskMapActivity extends AppCompatActivity {
         initToolbar();
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Tools.isExpireToken(this,this);
+    }
+
     private Bitmap getMarkerBitmapFromView(@DrawableRes int resId) {
 
         View customMarkerView = ((LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.view_map_marker, null);
@@ -170,6 +176,9 @@ public class TaskMapActivity extends AppCompatActivity {
         programacionListaMapa.enqueue(new Callback<List<ProgramacionListaMapaResponse>>() {
             @Override
             public void onResponse(Call<List<ProgramacionListaMapaResponse>> call, Response<List<ProgramacionListaMapaResponse>> response) {
+                if (response.code() == Consts.ERROR_UNAUTHORIZED) {
+                    Tools.isExpireToken(TaskMapActivity.this, TaskMapActivity.this);
+                }
                 if (response.isSuccessful()) {
                     List<ProgramacionListaMapaResponse> lista = response.body();
                     Integer total = lista.size();

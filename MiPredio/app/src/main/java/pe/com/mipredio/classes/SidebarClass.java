@@ -62,7 +62,7 @@ public class SidebarClass {
         return true;
     }
 
-    private static void logout(Activity activity, Context context ){
+    public static void logout(Activity activity, Context context ){
         AlertDialog.Builder alert = new AlertDialog.Builder(activity);
         alert.setTitle("Aviso");
         alert.setMessage("¿Desea salir de la aplicación?");
@@ -82,6 +82,7 @@ public class SidebarClass {
                 dialog.dismiss();
             }
         });
+        alert.setCancelable(false);
         alert.show();
     }
 

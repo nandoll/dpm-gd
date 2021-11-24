@@ -142,10 +142,11 @@
                     </LinearLayout>
                     <LinearLayout
                         android:layout_width="60dp"
-                        android:layout_height="60dp"
+                        android:layout_height="match_parent"
                         android:layout_weight="0.1"
                         android:orientation="vertical"
                         android:layout_gravity="center"
+                        android:gravity="center"
                         >
 
                         <ImageView
@@ -170,8 +171,9 @@
                             android:text="Enviado"
                             android:textAlignment="center"
                             android:textColor="@color/indigo_A200"
-                            android:textSize="10dp"
+                            android:textSize="@dimen/size11"
                             android:textStyle="bold"
+                            android:visibility="gone"
                             />
 
                     </LinearLayout>

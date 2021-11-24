@@ -9,12 +9,15 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -30,6 +33,7 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.zip.Inflater;
 
 import pe.com.mipredio.api.ApiClient;
 import pe.com.mipredio.classes.SidebarClass;
@@ -44,6 +48,7 @@ import pe.com.mipredio.utils.Tools;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+
 
 public class TaskListActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, TaskAdapter.OnTaskListener {
 
@@ -60,6 +65,7 @@ public class TaskListActivity extends AppCompatActivity implements NavigationVie
     private Integer _month;
     private Integer _year;
     private String sharePref;
+    private SwipeRefreshLayout swipe_refresh;
 
     private String fecha;
 
@@ -69,10 +75,11 @@ public class TaskListActivity extends AppCompatActivity implements NavigationVie
         viewMainContent = findViewById(R.id.main_content);
         floatingActionButtonAdd = (FloatingActionButton) findViewById(R.id.btnaddTask);
         sharePref = SharedPreference.getDefaultsPreference(Consts.LOGIN_MODE, this);
-
+        swipe_refresh = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
         initToolbar();
         initNavigationMenu();
         initTaskList();
+        initSwipeRefresh();
 
         floatingActionButtonAdd.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -81,6 +88,35 @@ public class TaskListActivity extends AppCompatActivity implements NavigationVie
                 startActivity(intent);
             }
         });
+    }
+
+    private void initSwipeRefresh(){
+        swipe_refresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                // pullAndRefresh();
+                llenarLista(fecha);
+            }
+        });
+    }
+    private void swipeProgress(final boolean show) {
+        if (!show) {
+            swipe_refresh.setRefreshing(show);
+            return;
+        }
+        swipe_refresh.post(new Runnable() {
+            @Override
+            public void run() {
+                swipe_refresh.setRefreshing(show);
+            }
+        });
+    }
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Tools.isExpireToken(this, this);
     }
 
     private void initCalendar() {
@@ -111,7 +147,6 @@ public class TaskListActivity extends AppCompatActivity implements NavigationVie
         }, _year, _month, _day);
         recogerFecha.show();
     }
-
     private void initToolbar() {
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -123,7 +158,6 @@ public class TaskListActivity extends AppCompatActivity implements NavigationVie
         Tools.setSystemBarColor(this, R.color.colorPrimary);
         Tools.setSystemBarLight(this);
     }
-
     private void initNavigationMenu() {
         nav_view = (NavigationView) findViewById(R.id.nav_view);
         nav_view.bringToFront();
@@ -140,7 +174,6 @@ public class TaskListActivity extends AppCompatActivity implements NavigationVie
         SidebarClass.showHideMenu(sharePref, nav_view);
         SidebarClass.getInfoSidebarHeader(this, nav_view);
     }
-
     private void initTaskList() {
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -189,6 +222,8 @@ public class TaskListActivity extends AppCompatActivity implements NavigationVie
     }
 
     private void llenarLista(String fecha) {
+        swipeProgress(true);
+
         String token = SharedPreference.getDefaultsPreference(Consts.TOKEN, this);
         Map<String, String> requestBody = new HashMap<>();
         requestBody.put("fecha", fecha);
@@ -196,25 +231,38 @@ public class TaskListActivity extends AppCompatActivity implements NavigationVie
         programacionLista.enqueue(new Callback<List<ProgramacionListaResponse>>() {
             @Override
             public void onResponse(Call<List<ProgramacionListaResponse>> call, Response<List<ProgramacionListaResponse>> response) {
+                if (response.code() == Consts.ERROR_UNAUTHORIZED) {
+                    Tools.isExpireToken(TaskListActivity.this, TaskListActivity.this);
+                }
                 if (response.isSuccessful()) {
+                    items.clear();
                     List<ProgramacionListaResponse> lista = response.body();
                     Integer total = lista.size();
                     if (total > 0) {
                         for (int i = 0; i < lista.size(); i++) {
+                            Log.e("EXCEPCION___", lista.get(i).getSituacion());
                             items.add(new TaskModel(lista.get(i).getId(), lista.get(i).getDireccion(), lista.get(i).getFecha(), lista.get(i).getHora(), lista.get(i).getUbigeo(), lista.get(i).getEstado(), lista.get(i).getNroMedidor(), lista.get(i).getSituacion()));
                         }
                         TaskAdapter taskAdapter = new TaskAdapter(items, TaskListActivity.this);
                         recyclerView.setAdapter(taskAdapter);
+                        View supportLayout = findViewById(R.id.viewNoResult);
+                        supportLayout.setVisibility(View.GONE);
                     } else {
+                        // Mostrar el aviso de sin resultado
+                        View supportLayout = findViewById(R.id.viewNoResult);
+                        supportLayout.setVisibility(View.VISIBLE);
+
                         items.clear();
                         TaskAdapter taskAdapter = new TaskAdapter(items, TaskListActivity.this);
                         recyclerView.setAdapter(taskAdapter);
+
                     }
                 }
+                swipeProgress(false);
             }
-
             @Override
             public void onFailure(Call<List<ProgramacionListaResponse>> call, Throwable t) {
+                swipeProgress(false);
                 Toast.makeText(TaskListActivity.this, "Error al consultar la programación", Toast.LENGTH_LONG).show();
             }
         });
@@ -282,6 +330,10 @@ public class TaskListActivity extends AppCompatActivity implements NavigationVie
                         } else {
                             ErrorResponse error = ErrorUtils.parseError(response);
                             Toast.makeText(TaskListActivity.this, "" + error.getMessages().getError(), Toast.LENGTH_SHORT).show();
+                        }
+
+                        if (response.code() == Consts.ERROR_UNAUTHORIZED) {
+                            Tools.isExpireToken(TaskListActivity.this, TaskListActivity.this);
                         }
                     }
 

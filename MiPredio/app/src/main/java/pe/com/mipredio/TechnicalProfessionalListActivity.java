@@ -49,6 +49,12 @@ public class TechnicalProfessionalListActivity
         initTechnicalProfessional();
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Tools.isExpireToken(this,this);
+    }
+
     private void initToolbar() {
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);

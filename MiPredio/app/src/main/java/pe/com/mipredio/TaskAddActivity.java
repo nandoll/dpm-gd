@@ -3,18 +3,24 @@ package pe.com.mipredio;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import android.Manifest;
 import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -23,21 +29,29 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
-import com.github.drjacky.imagepicker.ImagePicker;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputEditText;
+import com.squareup.picasso.Picasso;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 import pe.com.mipredio.api.ApiClient;
 import pe.com.mipredio.request.TaskCompleteRequest;
 import pe.com.mipredio.response.ErrorResponse;
 import pe.com.mipredio.response.ErrorUtils;
 import pe.com.mipredio.response.ProgramacionCompletarResponse;
 import pe.com.mipredio.response.ProgramacionDetalleResponse;
+import pe.com.mipredio.response.ProgramacionPhotoUploadResponse;
 import pe.com.mipredio.utils.Consts;
+import pe.com.mipredio.utils.FileUtil;
 import pe.com.mipredio.utils.SharedPreference;
 import pe.com.mipredio.utils.Tools;
 import retrofit2.Call;
@@ -81,11 +95,10 @@ public class TaskAddActivity extends AppCompatActivity {
     private void init() {
         initToolbar();
         checkPermisionLocate();
-        takeCameraGallery();
         initReferences();
         getInfoTask();
+        takeCameraGallery(this);
     }
-
 
     private void initReferences() {
         this.editTextAddress = (TextInputEditText) findViewById(R.id.textAddress);
@@ -120,6 +133,12 @@ public class TaskAddActivity extends AppCompatActivity {
     @Override
     public void invalidateOptionsMenu() {
         super.invalidateOptionsMenu();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Tools.isExpireToken(this, this);
     }
 
     // Agregar iconos en el toolbar
@@ -189,16 +208,38 @@ public class TaskAddActivity extends AppCompatActivity {
         });
     }
 
-    private void takeCameraGallery() {
+    private void takeCameraGallery(Context context) {
         floatingActionButtonImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(TaskAddActivity.this, "Hola Mundo", Toast.LENGTH_SHORT).show();
-                ImagePicker.Companion.with(TaskAddActivity.this)
-                        .crop()
-                        .compress(1024)
-                        .maxResultSize(1080, 1080)
-                        .start();
+                if (!checkCameraPermission()) {
+                    Log.e("PERMISOS", "0");
+                    requestCameraPermission();
+                } else {
+                    Log.e("PERMISOS", "1");
+                    final CharSequence[] options = {"Desde cámara", "Desde galería", "Cancelar"};
+                    AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                    builder.setCancelable(false);
+                    builder.setTitle("Seleccione una opción");
+                    builder.setItems(options, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            if (options[which].equals("Desde cámara")) {
+                                Intent takePicture = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+                                startActivityForResult(takePicture, 0);
+
+                            } else if (options[which].equals("Desde galería")) {
+                                Intent pickPhoto = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                                // Intent pickPhoto = new Intent(Intent.ACTION_PICK);
+                                startActivityForResult(pickPhoto, 1);//one can be replaced with any action code
+
+                            } else if (options[which].equals("Cancelar")) {
+                                dialog.dismiss();
+                            }
+                        }
+                    });
+                    builder.show();
+                }
             }
         });
     }
@@ -206,10 +247,63 @@ public class TaskAddActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode != RESULT_CANCELED) {
+            switch (requestCode) {
+                case 0: // Tomar foto
+                    if (resultCode == RESULT_OK && data != null) {
+                        Bitmap img = (Bitmap) data.getExtras().get("data");
+                        String imgPath = FileUtil.getPath(TaskAddActivity.this, getImageUri(TaskAddActivity.this, img));
+                        Log.e("RUTA_CAMARA", imgPath);
+                        uploadImage(Uri.parse(imgPath));
+                    }
+                    break;
+                case 1:  // Galeria
+                    if (resultCode == RESULT_OK && data != null) {
+                        Uri img = data.getData();
+                        String imgPath = FileUtil.getPath(TaskAddActivity.this, img);
 
-        ((LinearLayout) findViewById(R.id.layoutProfile)).setBackground(getResources().getDrawable(R.drawable.bg_no_item_city));
-        Uri uri = data.getData();
-        imageViewPredio.setImageURI(uri);
+                        Log.e("RUTA_GALERIA", imgPath);
+                        uploadImage(Uri.parse(imgPath));
+                    }
+                    break;
+            }
+        }
+    }
+
+    public Uri getImageUri(Context inContext, Bitmap inImage) {
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+        String path = MediaStore.Images.Media.insertImage(inContext.getContentResolver(), inImage, "intuenty", null);
+        Log.d("image uri", path);
+        return Uri.parse(path);
+    }
+
+
+    private void uploadImage(Uri uri) {
+        File file = new File(uri.getPath());  // Uri.parse(uri.getPath());
+        RequestBody requestFile = RequestBody.create(MediaType.parse("image/*"), file);
+        MultipartBody.Part part = MultipartBody.Part.createFormData("image", file.getName(), requestFile);
+        String token = SharedPreference.getDefaultsPreference(Consts.TOKEN, this);
+        Call<ProgramacionPhotoUploadResponse> photoUploadResponse = ApiClient.getProgramacionService().programacionPhotoUpload(token, this.id, part);
+        photoUploadResponse.enqueue(new Callback<ProgramacionPhotoUploadResponse>() {
+            @Override
+            public void onResponse(Call<ProgramacionPhotoUploadResponse> call, Response<ProgramacionPhotoUploadResponse> response) {
+                if (response.isSuccessful()) {
+                    Picasso.get().load(ApiClient.API_URL_IMAGE + response.body().getFile()).into(imageViewPredio);
+                    Tools.snackBarWithIconSuccess(TaskAddActivity.this, viewMainContent, "La imagen ha sido actualizada.");
+                } else {
+                    Tools.snackBarWithIconError(TaskAddActivity.this, viewMainContent, "No fue posible cargar la imagen. Intente nuevamente");
+                }
+
+                if (response.code() == Consts.ERROR_UNAUTHORIZED) {
+                    Tools.isExpireToken(TaskAddActivity.this, TaskAddActivity.this);
+                }
+            }
+            @Override
+            public void onFailure(Call<ProgramacionPhotoUploadResponse> call, Throwable t) {
+                Tools.snackBarWithIconWarning(TaskAddActivity.this, viewMainContent, "Error al intentar subir la image.");
+            }
+        });
     }
 
     // Validation
@@ -256,6 +350,7 @@ public class TaskAddActivity extends AppCompatActivity {
         return false;
     }
 
+    // Obtener información de la actividad
     private void getInfoTask() {
         String token = SharedPreference.getDefaultsPreference(Consts.TOKEN, this);
         Call<ProgramacionDetalleResponse> detalle = ApiClient.getProgramacionService().programacionDetalle(token, id);
@@ -268,6 +363,10 @@ public class TaskAddActivity extends AppCompatActivity {
                     editTextLastName.setText(response.body().getApellidos());
                     editTextDocID.setText(response.body().getDni());
                     editTextPrevDataCollection.setText(response.body().getMedicion_ant());
+                    if (!response.body().getFoto().isEmpty()) {
+                        // imageViewPredio
+                        Picasso.get().load(ApiClient.API_URL_IMAGE + response.body().getFoto()).into(imageViewPredio);
+                    }
                 } else {
                     ErrorResponse error = ErrorUtils.parseError(response);
                     Toast.makeText(TaskAddActivity.this, "" + error.getMessages().getError(), Toast.LENGTH_SHORT).show();
@@ -281,6 +380,19 @@ public class TaskAddActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        switch (requestCode) {
+            case 44:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    getCurrentLocation();
+                }
+                break;
+            default:
+                super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        }
+    }
 
     private void checkPermisionLocate() {
         if (ActivityCompat.checkSelfPermission(TaskAddActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) ==
@@ -311,13 +423,16 @@ public class TaskAddActivity extends AppCompatActivity {
         });
     }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == 44) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                getCurrentLocation();
-            }
-        }
+    // Permiso de la camara
+    private boolean checkCameraPermission() {
+        boolean result = ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) == (PackageManager.PERMISSION_GRANTED);
+        boolean result1 = ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == (PackageManager.PERMISSION_GRANTED);
+        return result && result1;
     }
+
+    private void requestCameraPermission() {
+        String[] cameraPermissions = new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE};
+        ActivityCompat.requestPermissions(this, cameraPermissions, Consts.CAMERA_REQUEST_CODE);
+    }
+
 }
