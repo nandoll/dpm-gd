@@ -5,12 +5,14 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import android.Manifest;
 import android.app.ProgressDialog;
+import android.app.SearchManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -19,14 +21,12 @@ import android.graphics.Bitmap;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -99,7 +99,6 @@ public class TaskAddActivity extends AppCompatActivity {
         getInfoTask();
         takeCameraGallery(this);
     }
-
     private void initReferences() {
         this.editTextAddress = (TextInputEditText) findViewById(R.id.textAddress);
         this.editTextNames = (TextInputEditText) findViewById(R.id.textNames);
@@ -116,25 +115,22 @@ public class TaskAddActivity extends AppCompatActivity {
         this.editTextPrevDataCollection.setEnabled(false);
 
     }
-
     private void initToolbar() {
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         actionBar = getSupportActionBar();
+        actionBar.setTitle("Registrar informe");
 
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setDisplayShowHomeEnabled(true);
 
-        actionBar.setTitle("Registrar informe");
         Tools.setSystemBarColor(this, R.color.colorPrimary);
         Tools.setSystemBarLight(this);
     }
-
     @Override
     public void invalidateOptionsMenu() {
         super.invalidateOptionsMenu();
     }
-
     @Override
     protected void onResume() {
         super.onResume();
@@ -153,8 +149,8 @@ public class TaskAddActivity extends AppCompatActivity {
 
         MenuItem itemDate = menu.findItem(R.id.action_calendar);
         itemDate.setVisible(false);
-
-        return true;
+        // return true;
+        return super.onCreateOptionsMenu(menu);
     }
 
     @Override
@@ -186,7 +182,6 @@ public class TaskAddActivity extends AppCompatActivity {
             public void onResponse(Call<ProgramacionCompletarResponse> call, Response<ProgramacionCompletarResponse> response) {
                 if (response.isSuccessful()) {
                     Tools.dismissProgressDialog(progressDialog);
-                    // Tools.snackBarWithIconSuccess(TaskAddActivity.this, viewMainContent, "La información ha sido guardada");
                     Toast.makeText(TaskAddActivity.this, "La información ha sido guardada", Toast.LENGTH_LONG).show();
                     Intent intent = new Intent(TaskAddActivity.this, TaskListActivity.class);
                     String dateParts[] = fecha.split("-"); // yyyy-mm-dd
@@ -299,6 +294,7 @@ public class TaskAddActivity extends AppCompatActivity {
                     Tools.isExpireToken(TaskAddActivity.this, TaskAddActivity.this);
                 }
             }
+
             @Override
             public void onFailure(Call<ProgramacionPhotoUploadResponse> call, Throwable t) {
                 Tools.snackBarWithIconWarning(TaskAddActivity.this, viewMainContent, "Error al intentar subir la image.");

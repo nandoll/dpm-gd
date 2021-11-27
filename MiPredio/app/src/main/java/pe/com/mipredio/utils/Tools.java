@@ -1,31 +1,26 @@
 package pe.com.mipredio.utils;
 
 import android.app.Activity;
-import android.app.Application;
+import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.graphics.drawable.Drawable;
 import android.os.Build;
-import android.text.Layout;
 import android.util.Log;
 import android.util.Patterns;
-import android.view.Gravity;
-import android.view.Menu;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.DatePicker;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.ColorRes;
 import androidx.annotation.DrawableRes;
 import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.drawable.RoundedBitmapDrawable;
 import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory;
 
@@ -34,17 +29,16 @@ import com.bumptech.glide.Glide;
 // import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.target.BitmapImageViewTarget;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
 
-import org.w3c.dom.Text;
-
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import pe.com.mipredio.LoginActivity;
 import pe.com.mipredio.R;
-import pe.com.mipredio.classes.SidebarClass;
 
 public class Tools {
 
@@ -105,6 +99,7 @@ public class Tools {
         snackBarView.addView(custom_view, 0);
         snackbar.show();
     }
+
     public static void snackBarWithIconError(Activity activity, View contentView, String text) {
         final Snackbar snackbar = Snackbar.make(contentView, "", Snackbar.LENGTH_SHORT);
         //inflate view
@@ -120,6 +115,7 @@ public class Tools {
         snackBarView.addView(custom_view, 0);
         snackbar.show();
     }
+
     public static void snackBarWithIconWarning(Activity activity, View contentView, String text) {
         final Snackbar snackbar = Snackbar.make(contentView, "", Snackbar.LENGTH_SHORT);
         //inflate view
@@ -202,6 +198,13 @@ public class Tools {
         progressDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
     }
 
+    public static void showLoadingProgressDialog(ProgressDialog progressDialog) {
+        progressDialog.show();
+        progressDialog.setContentView(R.layout.progress_dialog_loading);
+        progressDialog.setCancelable(false);
+        progressDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+    }
+
     public static void dismissProgressDialog(ProgressDialog progressDialog) {
         progressDialog.dismiss();
     }
@@ -233,5 +236,19 @@ public class Tools {
             }
         }
     }
+
+    public static boolean expiredToken(Activity activity, Context context) {
+        String token = SharedPreference.getDefaultsPreference(Consts.TOKEN, activity);
+        if (token != null) {
+            JWT jwt = new JWT(token);
+            Date createdDate = new Date();
+            Long diff = jwt.getExpiresAt().getTime() - createdDate.getTime();
+            return diff <= 0;
+        }
+        return true;
+    }
+
+
+
 
 }

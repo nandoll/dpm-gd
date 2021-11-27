@@ -10,11 +10,15 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.mikhaellopez.circularimageview.CircularImageView;
+import com.squareup.picasso.Picasso;
+
 import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import pe.com.mipredio.api.ApiClient;
 import pe.com.mipredio.model.TechnicalProfessionalModel;
 
 public class TechnicalProfessionalListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
@@ -42,11 +46,12 @@ public class TechnicalProfessionalListAdapter extends RecyclerView.Adapter<Recyc
             TechnicalProfessionalModel p = this.mTechProf.get(position);
             ViewHolder view = (ViewHolder) holder;
 
-            // Asignar valores
-            //view.textViewStatus.setText( p.getEstado().toUpperCase() );
-            view.textViewNames.setText(p.getNombres() + " " + p.getApellidos());
-            view.textViewPhone.setText(p.getCelular());
+            view.textViewNames.setText(p.getNombres());
+            view.textViewMail.setText(p.getCorreo());
             view.textViewSpecialty.setText(p.getEspecialidad());
+
+            Picasso.get().load(ApiClient.API_URL_IMAGE_PERSON + p.getFoto()).into(view.circularImageView);
+
         }
     }
 
@@ -60,16 +65,16 @@ public class TechnicalProfessionalListAdapter extends RecyclerView.Adapter<Recyc
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        TextView textViewNames, textViewPhone, textViewSpecialty;
+        TextView textViewNames, textViewMail, textViewSpecialty;
         OnTechProfListener mOnTechProfListener;
+        CircularImageView circularImageView;
 
         public ViewHolder(View itemView, OnTechProfListener onTechProfListener) {
             super(itemView);
-            //textViewStatus = (TextView) itemView.findViewById(R.id.textViewStatus);
-            //imageViewStatus = (ImageView) itemView.findViewById(R.id.imageViewStatus);
             textViewNames = (TextView) itemView.findViewById(R.id.technicalName);
-            textViewPhone = (TextView) itemView.findViewById(R.id.technicalPhone);
+            textViewMail = (TextView) itemView.findViewById(R.id.technicalMail);
             textViewSpecialty = (TextView) itemView.findViewById(R.id.technicalSpecialty);
+            circularImageView = (CircularImageView) itemView.findViewById(R.id.technicalImage);
             mOnTechProfListener = onTechProfListener;
             itemView.setOnClickListener(this);
         }

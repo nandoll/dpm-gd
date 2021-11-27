@@ -3,14 +3,16 @@ package pe.com.mipredio.api;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import pe.com.mipredio.services.LoginService;
+import pe.com.mipredio.services.PersonaService;
 import pe.com.mipredio.services.ProgramacionService;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ApiClient {
 
-    public static final String API_URL = "https://predios.anteru.cloud/";
+    public static final String API_URL = "http://issadent.generics-pharm.pl/public/";
     public static final String API_URL_IMAGE = API_URL + "images/";
+    public  static  final  String API_URL_IMAGE_PERSON = API_URL_IMAGE + "person/";
 
 
     public static Retrofit getRetrofit() {
@@ -36,7 +38,12 @@ public class ApiClient {
     }
 
     public static ProgramacionService getProgramacionService() {
-        ProgramacionService personaService = getRetrofit().create(ProgramacionService.class);
+        ProgramacionService programcionService = getRetrofit().create(ProgramacionService.class);
+        return programcionService;
+    }
+
+    public static PersonaService getPersonaService() {
+        PersonaService personaService = getRetrofit().create(PersonaService.class);
         return personaService;
     }
 

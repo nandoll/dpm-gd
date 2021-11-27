@@ -9,10 +9,36 @@ public class TechnicalProfessionalModel {
     private String celular;
     private String grado;
     private  String especialidad;
+    private String correo;
+    private String foto;
 
     public TechnicalProfessionalModel() {
+
     }
 
+
+    public TechnicalProfessionalModel(String nombres, String especialidad, String correo, String foto) {
+        this.nombres = nombres;
+        this.especialidad = especialidad;
+        this.correo = correo;
+        this.foto = foto;
+    }
+
+    public String getFoto() {
+        return foto;
+    }
+
+    public void setFoto(String foto) {
+        this.foto = foto;
+    }
+
+    public String getCorreo() {
+        return correo;
+    }
+
+    public void setCorreo(String correo) {
+        this.correo = correo;
+    }
     public TechnicalProfessionalModel(Integer id, String nombres, String apellidos, String dni, String celular, String grado, String especialidad) {
         this.id = id;
         this.nombres = nombres;

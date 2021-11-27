@@ -10,6 +10,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -21,9 +22,20 @@ import com.google.android.material.navigation.NavigationView;
 import java.util.ArrayList;
 import java.util.List;
 
+import pe.com.mipredio.api.ApiClient;
 import pe.com.mipredio.classes.SidebarClass;
+import pe.com.mipredio.model.TaskModel;
 import pe.com.mipredio.model.TechnicalProfessionalModel;
+import pe.com.mipredio.response.ErrorResponse;
+import pe.com.mipredio.response.ErrorUtils;
+import pe.com.mipredio.response.PersonaListaResponse;
+import pe.com.mipredio.response.ProgramacionListaResponse;
+import pe.com.mipredio.utils.Consts;
+import pe.com.mipredio.utils.SharedPreference;
 import pe.com.mipredio.utils.Tools;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class TechnicalProfessionalListActivity
         extends AppCompatActivity
@@ -37,22 +49,29 @@ public class TechnicalProfessionalListActivity
     private NavigationView nav_view;
     private DrawerLayout drawer;
     private TechnicalProfessionalListAdapter mTechnicalProfessionalListAdapter;
-    private  View viewMainContent;
+    private View viewMainContent;
+    private ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_technical_professional_list);
         viewMainContent = (View) findViewById(R.id.drawer_layout);
+
+        recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setHasFixedSize(true);
+
+
         initToolbar();
         initNavigationMenu();
-        initTechnicalProfessional();
+        listarPersonal();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        Tools.isExpireToken(this,this);
+        Tools.isExpireToken(this, this);
     }
 
     private void initToolbar() {
@@ -79,35 +98,54 @@ public class TechnicalProfessionalListActivity
         drawer.addDrawerListener(toggle);
         toggle.syncState();
         nav_view.setNavigationItemSelectedListener(this);
+
+        SidebarClass.showHideMenu(this, nav_view);
+        SidebarClass.getInfoSidebarHeader(this, nav_view);
+
+
     }
 
-    private void initTechnicalProfessional() {
-        recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setHasFixedSize(true);
-        mTechnicalProfessionalListAdapter = new TechnicalProfessionalListAdapter(getDataPrueba(), this);
-        recyclerView.setAdapter(mTechnicalProfessionalListAdapter);
+    private void listarPersonal() {
+        String token = SharedPreference.getDefaultsPreference(Consts.TOKEN, this);
+        progressDialog = new ProgressDialog(this);
+        Tools.showLoadingProgressDialog(progressDialog);
+
+        Call<List<PersonaListaResponse>> personaLista = ApiClient.getPersonaService().getListaPersonal(token);
+        personaLista.enqueue(new Callback<List<PersonaListaResponse>>() {
+            @Override
+            public void onResponse(Call<List<PersonaListaResponse>> call, Response<List<PersonaListaResponse>> response) {
+                if (response.isSuccessful()) {
+                    items.clear();
+                    List<PersonaListaResponse> lista = response.body();
+                    Integer total = lista.size();
+                    if (total > 0) {
+                        for (int i = 0; i < lista.size(); i++) {
+                            items.add(new TechnicalProfessionalModel(lista.get(i).getNombres(), lista.get(i).getEspecialidad(), lista.get(i).getCorreo(), lista.get(i).getFoto()));
+                        }
+                        mTechnicalProfessionalListAdapter = new TechnicalProfessionalListAdapter(items, TechnicalProfessionalListActivity.this);
+                        recyclerView.setAdapter(mTechnicalProfessionalListAdapter);
+                    } else {
+                        items.clear();
+                        mTechnicalProfessionalListAdapter = new TechnicalProfessionalListAdapter(items, TechnicalProfessionalListActivity.this);
+                        recyclerView.setAdapter(mTechnicalProfessionalListAdapter);
+                    }
+                } else {
+                    ErrorResponse error = ErrorUtils.parseError(response);
+                    Toast.makeText(TechnicalProfessionalListActivity.this, "" + error.getMessages().getError(), Toast.LENGTH_SHORT).show();
+                }
+                Tools.dismissProgressDialog(progressDialog);
+                if (response.code() == Consts.ERROR_UNAUTHORIZED) {
+                    Tools.isExpireToken(TechnicalProfessionalListActivity.this, TechnicalProfessionalListActivity.this);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<PersonaListaResponse>> call, Throwable t) {
+                Tools.dismissProgressDialog(progressDialog);
+                Toast.makeText(TechnicalProfessionalListActivity.this, "Error al consultar la litsa de personal", Toast.LENGTH_LONG).show();
+            }
+        });
     }
-
-
-    private List<TechnicalProfessionalModel> getDataPrueba() {
-        items.add(new TechnicalProfessionalModel(0, "Juan Carlos", "Millones Cuadro", "01255458", "988547199", "Ingeniero", "Analista Predio"));
-        items.add(new TechnicalProfessionalModel(0, "Luis Torres", "Millones Cuadro", "01245656", "988543459", "Ingeniero Civil", "Analista Predio"));
-        items.add(new TechnicalProfessionalModel(0, "Gabriel Perez", "Millones Cuadro", "01255671", "988547004", "Ingeniero Civil", "Analista Predio"));
-        items.add(new TechnicalProfessionalModel(0, "Ana Cecilia", "Millones Cuadro", "01254468", "900040499", "Ingeniero Civil", "Analista Predio"));
-        items.add(new TechnicalProfessionalModel(0, "Alba", "Millones Cuadro", "01257789", "988547199", "Ingeniero Civil", "Analista Predio"));
-        items.add(new TechnicalProfessionalModel(0, "Jose Miguel", "Millones Cuadro", "07895458", "95348099", "Ingeniero Civil", "Analista Predio"));
-        items.add(new TechnicalProfessionalModel(0, "Efrain Torres", "Millones Cuadro", "01220948", "911455036", "Ingeniero Civil", "Analista Ruta"));
-        items.add(new TechnicalProfessionalModel(0, "Jessica", "Millones Cuadro", "01251123", "988500456", "Ingeniero Civil", "Analista Predio"));
-        items.add(new TechnicalProfessionalModel(0, "Ericka", "Millones Cuadro", "3455548", "988311447", "Ingeniero Civil", "Analista Predio"));
-        items.add(new TechnicalProfessionalModel(0, "Hugo", "Millones Cuadro", "04155239", "978933079", "Ingeniero Civil", "Analista Predio"));
-        items.add(new TechnicalProfessionalModel(0, "Carlos", "Millones Cuadro", "7555458", "981472009", "Ingeniero Civil", "Analista Predio"));
-        items.add(new TechnicalProfessionalModel(0, "Luis", "Millones Cuadro", "00456345", "900001439", "Ingeniero Civil", "Analista Predio"));
-        items.add(new TechnicalProfessionalModel(0, "Xavier", "Millones Cuadro", "04565645", "990045699", "Ingeniero Civil", "Analista Predio"));
-        items.add(new TechnicalProfessionalModel(0, "Martin", "Millones Cuadro", "01209497", "976789784", "Ingeniero Civil", "Analista Predio"));
-        return items;
-    }
-
 
     @Override
     public void onBackPressed() {
@@ -126,6 +164,8 @@ public class TechnicalProfessionalListActivity
 
     @Override
     public void onTechnicalClick(int position) {
-
+        Intent intent = new Intent(this, TaskListActivity.class);
+        intent.putExtra("correo", items.get(position).getCorreo());
+        startActivity(intent);
     }
 }

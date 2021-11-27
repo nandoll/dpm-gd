@@ -8,6 +8,7 @@ import pe.com.mipredio.request.TaskCompleteRequest;
 import pe.com.mipredio.response.ProgramacionCerrarResponse;
 import pe.com.mipredio.response.ProgramacionCompletarResponse;
 import pe.com.mipredio.response.ProgramacionDetalleResponse;
+import pe.com.mipredio.response.ProgramacionListaChartResponse;
 import pe.com.mipredio.response.ProgramacionListaMapaResponse;
 import pe.com.mipredio.response.ProgramacionListaResponse;
 import pe.com.mipredio.response.ProgramacionPhotoUploadResponse;
@@ -39,8 +40,10 @@ public interface ProgramacionService {
     @POST("api/programaciones/upload/{id}")
     Call<ProgramacionPhotoUploadResponse> programacionPhotoUpload(@Header("Authorization") String authHeader, @Path("id") String id, @Part MultipartBody.Part part);
 
-
     @PUT("api/programaciones/dayClose")
     Call<ProgramacionCerrarResponse> programacionCerrar(@Header("Authorization") String authHeader, @Body Map<String, String> raw);
+
+    @POST("api/programaciones/getChartByDate")
+    Call<List<ProgramacionListaChartResponse>> programacionListaChart(@Header("Authorization") String authHeader, @Body Map<String, String> raw);
 
 }

@@ -25,6 +25,16 @@ public class ProgramacionDetalleResponse {
     private String comentario;
     @SerializedName("medicion_ant")
     private String medicion_ant;
+    @SerializedName("medidor")
+    private String medidor;
+
+    public String getMedidor() {
+        return medidor;
+    }
+
+    public void setMedidor(String medidor) {
+        this.medidor = medidor;
+    }
 
     public String getIdPredio() {
         return idPredio;

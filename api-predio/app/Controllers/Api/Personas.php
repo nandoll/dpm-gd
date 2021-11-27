@@ -86,13 +86,16 @@ class Personas extends ResourceController
     public function technicians(){
         $jwt = getHeader($this->request);
         if(!validateAccess( array('jefe') , $jwt )){
-            return $this->failServerError('El Rol no tiene permitido la petición realizada.');
+            return $this->failServerError('El Rol no tiene realizar dicha petición.');
         }
         $persona = new Persona();
         // $personaData = $persona->asObject()->where("correo",$jwt->data->username)->first();
         $personaData = $persona->asObject()->where("correo",$jwt->_username)->first();
         $id = $personaData->id;
-        $lista = $persona->where("idJefe",$id)->findAll();
+
+        //$lista = $persona->where("idJefe",$id)->findAll();
+        //return $this->respond($lista);
+        $lista = $persona->select("correo, nombres, especialidad, foto")->where("idJefe",$id)->findAll();
         return $this->respond($lista);
     }
 }

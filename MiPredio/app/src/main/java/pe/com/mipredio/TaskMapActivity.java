@@ -40,6 +40,7 @@ import java.util.Map;
 
 import pe.com.mipredio.api.ApiClient;
 import pe.com.mipredio.classes.MapClass;
+import pe.com.mipredio.classes.TokenClass;
 import pe.com.mipredio.response.ProgramacionListaMapaResponse;
 import pe.com.mipredio.utils.Consts;
 import pe.com.mipredio.utils.SharedPreference;
@@ -58,14 +59,30 @@ public class TaskMapActivity extends AppCompatActivity {
     private String id;
     private String fecha;
 
+    private Double latitude;
+    private Double longitude;
+
+    private String mailPersona;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_task_map);
         viewMainContent = findViewById(R.id.main_content);
+
         id = getIntent().getStringExtra("taskId");
         fecha = getIntent().getStringExtra("taskDate");
+
+        if (getIntent().getStringExtra("latitude") != null) {
+            latitude = Double.valueOf(getIntent().getStringExtra("latitude"));
+        }
+        if (getIntent().getStringExtra("longitude") != null) {
+            longitude = Double.valueOf(getIntent().getStringExtra("longitude"));
+        }
+
+        mailPersona = getIntent().getStringExtra("taskMail"); // Correo del tecnico seleccionado
+
         initMap();
         initComponent();
         initToolbar();
@@ -74,7 +91,7 @@ public class TaskMapActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        Tools.isExpireToken(this,this);
+        Tools.isExpireToken(this, this);
     }
 
     private Bitmap getMarkerBitmapFromView(@DrawableRes int resId) {
@@ -169,34 +186,51 @@ public class TaskMapActivity extends AppCompatActivity {
 
     private void generateMarkers() {
         List<MapClass> items = new ArrayList<>();
-        String token = SharedPreference.getDefaultsPreference(Consts.TOKEN, this);
-        Map<String, String> requestBody = new HashMap<>();
-        requestBody.put("fecha", fecha);
-        Call<List<ProgramacionListaMapaResponse>> programacionListaMapa = ApiClient.getProgramacionService().programacionListaMapa(token, requestBody);
-        programacionListaMapa.enqueue(new Callback<List<ProgramacionListaMapaResponse>>() {
-            @Override
-            public void onResponse(Call<List<ProgramacionListaMapaResponse>> call, Response<List<ProgramacionListaMapaResponse>> response) {
-                if (response.code() == Consts.ERROR_UNAUTHORIZED) {
-                    Tools.isExpireToken(TaskMapActivity.this, TaskMapActivity.this);
-                }
-                if (response.isSuccessful()) {
-                    List<ProgramacionListaMapaResponse> lista = response.body();
-                    Integer total = lista.size();
 
-                    if (total > 0) {
-                        for (int i = 0; i < lista.size(); i++) {
-                            items.add(new MapClass(Double.parseDouble(lista.get(i).getLatitud()), Double.parseDouble(lista.get(i).getLongitud()), "", "", "", ""));
-                        }
+        if (latitude != null && longitude != null) {
+            Log.e("MAPA", "Solo un marcador");
+            items.add(new MapClass(latitude, longitude, "", "", "", ""));
+            getMarkers(items);
+        } else {
+            Log.e("MAPA", "Varios marcadores");
+            String token = SharedPreference.getDefaultsPreference(Consts.TOKEN, this);
+            Map<String, String> requestBody = new HashMap<>();
+            requestBody.put("fecha", fecha);
+
+            if (token != null) {
+                TokenClass tokenClass = new TokenClass(token);
+                if (tokenClass.getRol().equals("jefe")) {
+                    requestBody.put("correo", mailPersona);
+                }
+            }
+
+
+            Call<List<ProgramacionListaMapaResponse>> programacionListaMapa = ApiClient.getProgramacionService().programacionListaMapa(token, requestBody);
+            programacionListaMapa.enqueue(new Callback<List<ProgramacionListaMapaResponse>>() {
+                @Override
+                public void onResponse(Call<List<ProgramacionListaMapaResponse>> call, Response<List<ProgramacionListaMapaResponse>> response) {
+                    if (response.code() == Consts.ERROR_UNAUTHORIZED) {
+                        Tools.isExpireToken(TaskMapActivity.this, TaskMapActivity.this);
                     }
-                    getMarkers(items);
-                    Log.e("TOTAL_MAPA", total.toString());
-                }
-            }
+                    if (response.isSuccessful()) {
+                        List<ProgramacionListaMapaResponse> lista = response.body();
+                        Integer total = lista.size();
 
-            @Override
-            public void onFailure(Call<List<ProgramacionListaMapaResponse>> call, Throwable t) {
-                Toast.makeText(TaskMapActivity.this, "Error al consultar las ubicaciones en mapa", Toast.LENGTH_LONG).show();
-            }
-        });
+                        if (total > 0) {
+                            for (int i = 0; i < lista.size(); i++) {
+                                items.add(new MapClass(Double.parseDouble(lista.get(i).getLatitud()), Double.parseDouble(lista.get(i).getLongitud()), "", "", "", ""));
+                            }
+                        }
+                        getMarkers(items);
+                        Log.e("TOTAL_MAPA", total.toString());
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<List<ProgramacionListaMapaResponse>> call, Throwable t) {
+                    Toast.makeText(TaskMapActivity.this, "Error al consultar las ubicaciones en mapa", Toast.LENGTH_LONG).show();
+                }
+            });
+        }
     }
 }

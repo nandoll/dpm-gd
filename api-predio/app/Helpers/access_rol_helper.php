@@ -26,10 +26,12 @@ function validateAccess($roles, $jwt) : bool
     $rolmodel = new Rol();
     // $rol = $rolmodel->find($jwt->data->rol);
     // $rol = $rolmodel->where('nombres',$jwt->data->rol)->first();
+    // echo $jwt->_rol;
     $rol = $rolmodel->where('nombres',$jwt->_rol)->first();
     if ($rol == null) :
         return false;
     endif;
+    // var_dump($rol);
 
     // foreach ($roles as $key => $value) {
     //     if ($value != $rol["nombre"])
@@ -39,6 +41,5 @@ function validateAccess($roles, $jwt) : bool
     if(!in_array($rol["nombres"] , $roles)): 
         return false;
     endif;
-
     return true;
 }

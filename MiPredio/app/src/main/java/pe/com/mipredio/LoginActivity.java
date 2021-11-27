@@ -108,10 +108,19 @@ public class LoginActivity extends AppCompatActivity {
                 loginBtn.setAlpha(1f);
                 progress_bar.setVisibility(View.GONE);
                 if (response.isSuccessful()) {
-                    SharedPreference.setDefaultsPreference(Consts.LOGIN_MODE,"account", LoginActivity.this);
-                    SharedPreference.setDefaultsPreference(Consts.TOKEN, response.body().getToken() , LoginActivity.this );
-                    startActivity(new Intent(LoginActivity.this, TaskListActivity.class));
-                    finish();
+                    SharedPreference.setDefaultsPreference(Consts.LOGIN_MODE, "account", LoginActivity.this);
+                    SharedPreference.setDefaultsPreference(Consts.TOKEN, response.body().getToken(), LoginActivity.this);
+
+                    String token = SharedPreference.getDefaultsPreference(Consts.TOKEN, LoginActivity.this);
+                    TokenClass tokenClass = new TokenClass(token);
+
+                    if (tokenClass.getRol().toLowerCase().equals("jefe")) {
+                        startActivity(new Intent(LoginActivity.this, TechnicalProfessionalListActivity.class));
+                        finish();
+                    } else {
+                        startActivity(new Intent(LoginActivity.this, TaskListActivity.class));
+                        finish();
+                    }
                 } else {
                     ErrorResponse error = ErrorUtils.parseError(response);
                     Tools.snackBarWithIconError(LoginActivity.this, viewMainContent, error.getMessages().getError());

@@ -6,12 +6,9 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.CAMERA" />
-
-
 
     <application
         android:allowBackup="true"
@@ -23,39 +20,41 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
         <activity
+            android:name=".SearchPredioActivity"
+            android:exported="true" />
+        <activity
             android:name=".SplashActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
             android:name=".RouteAssignActivity"
-            android:exported="true"></activity>
+            android:exported="true" />
         <activity
             android:name=".TechnicalProfessionalListActivity"
-            android:exported="true"></activity>
+            android:exported="true" />
         <activity
             android:name=".ChartActivity"
-            android:exported="true"></activity>
+            android:exported="true" />
         <activity
             android:name=".TaskMapActivity"
-            android:exported="true"></activity>
+            android:exported="true" />
         <activity
             android:name=".TaskDetailActivity"
-            android:exported="true"></activity>
+            android:exported="true" />
         <activity
             android:name=".LoginActivity"
-            android:exported="true">
-
-        </activity>
+            android:exported="true"></activity>
         <activity
             android:name=".TaskAddActivity"
-            android:exported="true"></activity>
+            android:exported="true" />
         <activity
             android:name=".TaskListActivity"
-            android:exported="true"></activity>
+            android:exported="true" />
         <activity
             android:name=".MainActivity"
             android:exported="true" />

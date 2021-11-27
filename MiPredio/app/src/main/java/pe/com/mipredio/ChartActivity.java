@@ -1,6 +1,7 @@
 package pe.com.mipredio;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
@@ -9,9 +10,12 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
 import android.app.DatePickerDialog;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -31,9 +35,24 @@ import com.google.android.material.navigation.NavigationView;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
+import pe.com.mipredio.api.ApiClient;
+import pe.com.mipredio.classes.DateCalendarClass;
 import pe.com.mipredio.classes.SidebarClass;
+import pe.com.mipredio.classes.TokenClass;
+import pe.com.mipredio.response.ErrorResponse;
+import pe.com.mipredio.response.ErrorUtils;
+import pe.com.mipredio.response.ProgramacionListaChartResponse;
+import pe.com.mipredio.response.ProgramacionListaResponse;
+import pe.com.mipredio.utils.Consts;
+import pe.com.mipredio.utils.SharedPreference;
 import pe.com.mipredio.utils.Tools;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class ChartActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -42,26 +61,28 @@ public class ChartActivity extends AppCompatActivity implements NavigationView.O
     private DrawerLayout drawer;
     private NavigationView nav_view;
     private View viewMainContent;
+    private String token;
+    private ProgressDialog progressDialog;
 
     BarChart mChart;
     private float groupSpace = 0.4f;
     private float barSpace = 0f;
     private float barWidth = 0.3f;
 
-    private Integer _day;
-    private Integer _month;
-    private Integer _year;
+    private DateCalendarClass dateCalendarClass;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chart);
         viewMainContent = findViewById(R.id.main_content);
+        this.token = SharedPreference.getDefaultsPreference(Consts.TOKEN, this);
         mChart = (BarChart) findViewById(R.id.bar_chart);
-
         initToolbar();
         initNavigationMenu();
-        initChartBar();
+        dateCalendarClass = new DateCalendarClass(this);
+        cargarChart();
+
     }
 
     @Override
@@ -98,41 +119,27 @@ public class ChartActivity extends AppCompatActivity implements NavigationView.O
         return true;
     }
 
+
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_calendar:
-                initCalendar();
+                dateCalendarClass.calendarPicker();
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                    dateCalendarClass.getPicker().setOnDateSetListener(new DatePickerDialog.OnDateSetListener() {
+                        @Override
+                        public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                            dateCalendarClass.set_year(year);
+                            dateCalendarClass.set_month(month + 1);
+                            dateCalendarClass.set_day(dayOfMonth);
+                            dateCalendarClass.setFormat();
+                            cargarChart();
+                        }
+                    });
+                }
                 break;
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    private void initCalendar() {
-        if (_day == null || _month == null || _year == null) {
-            Calendar cur_calender = Calendar.getInstance();
-            _day = cur_calender.get(Calendar.DAY_OF_MONTH);
-            _month = cur_calender.get(Calendar.MONTH);
-            _year = cur_calender.get(Calendar.YEAR);
-        }
-
-        Tools.snackBarWithIconSuccess(ChartActivity.this, viewMainContent, "Año:" + _year + "Mes: " + _month + " Dia: " + _day);
-        DatePickerDialog recogerFecha = new DatePickerDialog(ChartActivity.this, R.style.DatePickerThemeLight, new DatePickerDialog.OnDateSetListener() {
-            @Override
-            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                Calendar calendar = Calendar.getInstance();
-                calendar.set(Calendar.YEAR, year);
-                calendar.set(Calendar.MONTH, month);
-                calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-                _year = year;
-                _month = month;
-                _day = dayOfMonth;
-                Tools.snackBarWithIconSuccess(ChartActivity.this, viewMainContent, "Año:" + _year + "Mes: " + _month + " Dia: " + _day);
-                // Toast.makeText(TaskListActivity.this, "_year ...." + _year + " ... _month " + _month + " ... _day " + _day ,Toast.LENGTH_LONG).show();
-
-            }
-        }, _year, _month, _day);
-        recogerFecha.show();
     }
 
     private void initNavigationMenu() {
@@ -148,6 +155,9 @@ public class ChartActivity extends AppCompatActivity implements NavigationView.O
         drawer.addDrawerListener(toggle);
         toggle.syncState();
         nav_view.setNavigationItemSelectedListener(this);
+
+        SidebarClass.showHideMenu(this, nav_view);
+        SidebarClass.getInfoSidebarHeader(this, nav_view);
     }
 
     @Override
@@ -164,14 +174,56 @@ public class ChartActivity extends AppCompatActivity implements NavigationView.O
         return SidebarClass.actionSidebarMenu(item, this, viewMainContent, drawer);
     }
 
-    public void initChartBar() {
+    public void cargarChart() {
+        progressDialog = new ProgressDialog(this);
+        Tools.showLoadingProgressDialog(progressDialog);
+
+        TokenClass tokenClass = new TokenClass(this.token);
+        Map<String, String> requestBody = new HashMap<>();
+        requestBody.put("fecha", dateCalendarClass.get_fecha());
+        requestBody.put("usuario", tokenClass.getUsername());
+        Call<List<ProgramacionListaChartResponse>> chart = ApiClient.getProgramacionService().programacionListaChart(token, requestBody);
+        chart.enqueue(new Callback<List<ProgramacionListaChartResponse>>() {
+            @Override
+            public void onResponse(Call<List<ProgramacionListaChartResponse>> call, Response<List<ProgramacionListaChartResponse>> response) {
+                if (response.isSuccessful()) {
+                    agregarItems(response.body());
+                } else {
+                    agregarItems(null);
+                    ErrorResponse error = ErrorUtils.parseError(response);
+                    Toast.makeText(ChartActivity.this, "" + error.getMessages().getError(), Toast.LENGTH_SHORT).show();
+                }
+                Tools.dismissProgressDialog(progressDialog);
+            }
+
+            @Override
+            public void onFailure(Call<List<ProgramacionListaChartResponse>> call, Throwable t) {
+                Tools.dismissProgressDialog(progressDialog);
+                Toast.makeText(ChartActivity.this, "Error al consultar la programación", Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
+    private void agregarItems(List<ProgramacionListaChartResponse> lista) {
         ArrayList<BarEntry> barRegister = new ArrayList<>();
         ArrayList<BarEntry> barPending = new ArrayList<>();
-        String[] labels = {"", "Luis Antonio", "Carlos Alberto", "Luisa Miranda", "James Perez", "Airthon Mendoza", ""};
-        float[] colRegister = {45, 38, 45, 30, 33}; // Registrados
-        float[] colPending = {2, 3, 1, 3, 4}; // Pendientes
-        ArrayList<IBarDataSet> dataSets = new ArrayList<IBarDataSet>();
+        String[] labels = new String[lista.size() + 2];
+        float[] colRegister = new float[lista.size()];
+        float[] colPending = new float[lista.size()];
 
+        if (lista.size() > 0) {
+            int row = 0;
+            labels[0] = "";
+            for (ProgramacionListaChartResponse item : lista) {
+                labels[row + 1] = item.getNombres(); // .get(row).getNombres();
+                colRegister[row] = Float.parseFloat(item.getRegistrado());
+                colPending[row] = Float.parseFloat(item.getPendiente());
+                row++;
+            }
+            labels[row + 1] = "";
+        }
+
+        ArrayList<IBarDataSet> dataSets = new ArrayList<IBarDataSet>();
 
         XAxis xAxis = mChart.getXAxis();
         mChart.setDrawBarShadow(false);
@@ -236,5 +288,6 @@ public class ChartActivity extends AppCompatActivity implements NavigationView.O
         mChart.setFitBars(true);
         mChart.invalidate();
     }
+
 
 }

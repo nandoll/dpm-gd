@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -14,6 +15,7 @@ import android.widget.Toast;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
+import com.auth0.android.jwt.JWT;
 import com.google.android.material.navigation.NavigationView;
 
 import pe.com.mipredio.ChartActivity;
@@ -27,13 +29,33 @@ import pe.com.mipredio.utils.SharedPreference;
 import pe.com.mipredio.utils.Tools;
 
 public class SidebarClass {
-    public static void showHideMenu(String sharePref, NavigationView nav_view){
+    // public static void showHideMenu(String sharePref, NavigationView nav_view){
+    public static void showHideMenu(Context context, NavigationView nav_view){
+        String token = SharedPreference.getDefaultsPreference(Consts.TOKEN , context);
+        TokenClass tokenClass = new TokenClass(token);
+        Menu m = nav_view.getMenu();
+        if(tokenClass.getRol() != null){
+            Log.e("ROL_SIDE_BAR",tokenClass.getRol());
+            if(!tokenClass.getRol().toLowerCase().equals("jefe")){
+                m.findItem(R.id.menuPersonList).setVisible(false);
+                m.findItem(R.id.menuImportRoute).setVisible(false);
+            }else{
+                m.findItem(R.id.menuTaskList).setVisible(false);
+            }
+        }else{ // modo sin conexion
+            m.findItem(R.id.menuPersonList).setVisible(false);
+            m.findItem(R.id.menuImportRoute).setVisible(false);
+            m.findItem(R.id.menuDashboard).setVisible(false);
+        }
+
+        /*
         if (!sharePref.equals("account")) {
             Menu m = nav_view.getMenu();
             m.findItem(R.id.menuPersonList).setVisible(false);
             m.findItem(R.id.menuImportRoute).setVisible(false);
             m.findItem(R.id.menuDashboard).setVisible(false);
         }
+        */
     }
 
     public static boolean actionSidebarMenu(MenuItem item, Activity activity, View view, DrawerLayout drawerLayout){
@@ -88,19 +110,25 @@ public class SidebarClass {
 
     public static void getInfoSidebarHeader(Context context, NavigationView nav_view){
         // SharedPreference
-        String toke = SharedPreference.getDefaultsPreference(Consts.TOKEN , context);
+        String token = SharedPreference.getDefaultsPreference(Consts.TOKEN , context);
         String mode = SharedPreference.getDefaultsPreference(Consts.LOGIN_MODE , context);
 
-        TokenClass tokenClass = new TokenClass(toke);
+        TokenClass tokenClass = new TokenClass(token);
 
         View headerView = nav_view.getHeaderView(0);
-        if (toke != null){
+        if (token != null){
             ((TextView)headerView.findViewById(R.id.textName)).setText(tokenClass.getNombre());
             ((TextView)headerView.findViewById(R.id.textSpecialty)).setText(tokenClass.getEspecialidad());
             ((TextView)headerView.findViewById(R.id.textRol)).setText(tokenClass.getRol().toUpperCase());
         }
 
         if(!mode.equals("anonymous")){
+            // String token = SharedPreference.getDefaultsPreference(Consts.TOKEN, context);
+            //JWT jwt = new JWT(token);
+            if ( !tokenClass.getRol().toLowerCase().equals("jefe") ){
+
+            }
+
             ((TextView)headerView.findViewById(R.id.textSpecialty)).setVisibility(View.VISIBLE);
             ((TextView)headerView.findViewById(R.id.textRol)).setVisibility(View.VISIBLE);
         }

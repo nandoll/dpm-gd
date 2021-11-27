@@ -69,6 +69,54 @@
                     android:padding="@dimen/spacing_large">
 
 
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:id="@+id/layoutByAnonimous"
+                        android:visibility="gone"
+                        >
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Nro Medidor"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+                            android:textColor="@color/grey_60" />
+                        <com.google.android.material.textfield.TextInputLayout
+                            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/textNroMedidor"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:inputType="number"
+                                android:padding="16dp" />
+                        </com.google.android.material.textfield.TextInputLayout>
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Ubigeo"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+                            android:textColor="@color/grey_60" />
+                        <com.google.android.material.textfield.TextInputLayout
+                            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/textUbigeo"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:inputType="number"
+                                android:padding="16dp" />
+                        </com.google.android.material.textfield.TextInputLayout>
+                    </LinearLayout>
+
+
+
+
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -85,8 +133,7 @@
                             android:id="@+id/textAddress"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:padding="16dp"
-                            />
+                            android:padding="16dp" />
 
                     </com.google.android.material.textfield.TextInputLayout>
 
@@ -156,9 +203,9 @@
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/textDocID"
-                            android:inputType="number"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:inputType="number"
                             android:padding="16dp" />
 
                     </com.google.android.material.textfield.TextInputLayout>
@@ -195,8 +242,7 @@
                                     android:id="@+id/textPreviousDataCollection"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
-                                    android:padding="16dp"
-                                    />
+                                    android:padding="16dp" />
 
                             </com.google.android.material.textfield.TextInputLayout>
 
