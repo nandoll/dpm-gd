@@ -29,7 +29,7 @@ import pe.com.mipredio.utils.SharedPreference;
 import pe.com.mipredio.utils.Tools;
 
 public class SidebarClass {
-    // public static void showHideMenu(String sharePref, NavigationView nav_view){
+
     public static void showHideMenu(Context context, NavigationView nav_view){
         String token = SharedPreference.getDefaultsPreference(Consts.TOKEN , context);
         TokenClass tokenClass = new TokenClass(token);
@@ -47,15 +47,6 @@ public class SidebarClass {
             m.findItem(R.id.menuImportRoute).setVisible(false);
             m.findItem(R.id.menuDashboard).setVisible(false);
         }
-
-        /*
-        if (!sharePref.equals("account")) {
-            Menu m = nav_view.getMenu();
-            m.findItem(R.id.menuPersonList).setVisible(false);
-            m.findItem(R.id.menuImportRoute).setVisible(false);
-            m.findItem(R.id.menuDashboard).setVisible(false);
-        }
-        */
     }
 
     public static boolean actionSidebarMenu(MenuItem item, Activity activity, View view, DrawerLayout drawerLayout){

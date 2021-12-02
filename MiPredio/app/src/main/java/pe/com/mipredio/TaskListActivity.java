@@ -45,6 +45,7 @@ import pe.com.mipredio.response.ErrorResponse;
 import pe.com.mipredio.response.ErrorUtils;
 import pe.com.mipredio.response.ProgramacionCerrarResponse;
 import pe.com.mipredio.response.ProgramacionListaResponse;
+import pe.com.mipredio.sqlite.TaskDBHelper;
 import pe.com.mipredio.utils.Consts;
 import pe.com.mipredio.utils.SharedPreference;
 import pe.com.mipredio.utils.Tools;
@@ -67,10 +68,14 @@ public class TaskListActivity extends AppCompatActivity implements NavigationVie
     private String token;
     TokenClass tokenClass;
     private String mailPersona;
+    private String entryMode;
 
     private String sharePref;
     private SwipeRefreshLayout swipe_refresh;
     private DateCalendarClass dateCalendarClass;
+
+    // SQLite
+    TaskDBHelper taskDBHelper;
 
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,12 +92,21 @@ public class TaskListActivity extends AppCompatActivity implements NavigationVie
         token = SharedPreference.getDefaultsPreference(Consts.TOKEN, this);
         tokenClass = new TokenClass(token);
         mailPersona = getIntent().getStringExtra("correo"); // Correo del tecnico seleccionado
+        entryMode = SharedPreference.getDefaultsPreference(Consts.LOGIN_MODE, this);
+
+        if(entryMode.equals("account")){
+            floatingActionButtonAdd.setVisibility(View.GONE);
+        }
+
+        taskDBHelper = new TaskDBHelper(this);
+
         init();
 
         floatingActionButtonAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(TaskListActivity.this, TaskAddActivity.class);
+                intent.putExtra("fecha", dateCalendarClass.get_fecha() );
                 startActivity(intent);
             }
         });
@@ -183,26 +197,28 @@ public class TaskListActivity extends AppCompatActivity implements NavigationVie
     }
 
     private void llenarLista() {
-
         ((TextView) findViewById(R.id.textDateSelected)).setText(dateCalendarClass.getTextMonthYear());
         ((TextView) findViewById(R.id.textDateSelectedDay)).setText(dateCalendarClass.getTextDay());
-
         View supportLayout = findViewById(R.id.viewNoResult);
         supportLayout.setVisibility(View.GONE);
-        swipeProgress(true);
+        if (entryMode.equals("account")) {
+            swipeProgress(true);
+            getListaByService(supportLayout);
+        } else {
+            swipeProgress(false);
+            getListaBySQLite(supportLayout);
+        }
+    }
 
-        //String token = SharedPreference.getDefaultsPreference(Consts.TOKEN, this);
+    private void getListaByService(View supportLayout) {
         Map<String, String> requestBody = new HashMap<>();
         requestBody.put("fecha", dateCalendarClass.get_fecha());
-
         if (this.token != null) {
             TokenClass tokenClass = new TokenClass(this.token);
             if (tokenClass.getRol().equals("jefe")) {
-
                 requestBody.put("tecnico", mailPersona);
             }
         }
-
         Call<List<ProgramacionListaResponse>> programacionLista = ApiClient.getProgramacionService().programacionLista(token, requestBody);
         programacionLista.enqueue(new Callback<List<ProgramacionListaResponse>>() {
             @Override
@@ -239,6 +255,18 @@ public class TaskListActivity extends AppCompatActivity implements NavigationVie
         });
     }
 
+    private void getListaBySQLite(View supportLayout) {
+        Log.e("FECHA" , dateCalendarClass.get_fecha());
+        items = taskDBHelper.getListTaskSQLite(dateCalendarClass.get_fecha());
+        Log.e("ITEMS_SQLITE", items.size() + "");
+        TaskAdapter taskAdapter = new TaskAdapter(items, TaskListActivity.this);
+        recyclerView.setAdapter(taskAdapter);
+        if (items.size() <= 0) {
+            supportLayout.setVisibility(View.VISIBLE);
+        }
+    }
+
+
     @Override
     public void onTaskClick(int position) {
         if (
@@ -260,20 +288,24 @@ public class TaskListActivity extends AppCompatActivity implements NavigationVie
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_task_toolbar, menu);
 
-
-        if (this.token != null) {
-            if (tokenClass.getRol().equals("jefe")) {
-                MenuItem itemSave = menu.findItem(R.id.action_save);
-                itemSave.setVisible(false);
-                MenuItem itemSend = menu.findItem(R.id.action_send_task);
-                itemSend.setVisible(false);
-            } else {
-                MenuItem item = menu.findItem(R.id.action_save);
-                item.setVisible(false);
+        if(sharePref.equals("account")){
+            if (this.token != null) {
+                if (tokenClass.getRol().equals("jefe")) {
+                    MenuItem itemSave = menu.findItem(R.id.action_save);
+                    itemSave.setVisible(false);
+                    MenuItem itemSend = menu.findItem(R.id.action_send_task);
+                    itemSend.setVisible(false);
+                } else {
+                    MenuItem item = menu.findItem(R.id.action_save);
+                    item.setVisible(false);
+                }
             }
+        }else{
+            MenuItem item = menu.findItem(R.id.action_save);
+            item.setVisible(false);
+            MenuItem itemMap = menu.findItem(R.id.action_map);
+            itemMap.setVisible(false);
         }
-
-
         return true;
     }
 

@@ -13,7 +13,7 @@ public class TaskModel {
     private String longitud;
     private String nroDocumento;
     private String medicion;
-    private String observacioj;
+    private String observacion;
     private String fechaRegistro;
     private String horaRegistro;
     private String ubigeo;
@@ -21,6 +21,7 @@ public class TaskModel {
     private String personalId;
     private String nroMedidor;
     private String situacion;
+    private String foto;
 
     public TaskModel(String id, String direccion, String fechaRegistro, String horaRegistro, String ubigeo, String estado, String nroMedidor, String situacion) {
         this.id = id;
@@ -33,11 +34,12 @@ public class TaskModel {
         this.situacion = situacion;
     }
 
-    public TaskModel(){
+    public TaskModel() {
 
     }
 
-    public TaskModel(String id, String direccion, String contacto, String latitud, String longitud, String nroDocumento, String medicion, String observacioj, String fechaRegistro, String horaRegistro, String ubigeo, String estado, String personalId, String nroMedidor, String situacion) {
+
+    public TaskModel(String id, String direccion, String contacto, String latitud, String longitud, String nroDocumento, String medicion, String observacion, String fechaRegistro, String horaRegistro, String ubigeo, String estado, String personalId, String nroMedidor, String situacion, String foto) {
         this.id = id;
         this.direccion = direccion;
         this.contacto = contacto;
@@ -45,7 +47,7 @@ public class TaskModel {
         this.longitud = longitud;
         this.nroDocumento = nroDocumento;
         this.medicion = medicion;
-        this.observacioj = observacioj;
+        this.observacion = observacion;
         this.fechaRegistro = fechaRegistro;
         this.horaRegistro = horaRegistro;
         this.ubigeo = ubigeo;
@@ -53,6 +55,43 @@ public class TaskModel {
         this.personalId = personalId;
         this.nroMedidor = nroMedidor;
         this.situacion = situacion;
+        this.foto = foto;
+    }
+
+    public TaskModel(String id, String direccion, String contacto, String latitud, String longitud, String nroDocumento, String medicion, String observacion, String fechaRegistro, String horaRegistro, String ubigeo, String estado, String personalId, String nroMedidor, String situacion) {
+        this.id = id;
+        this.direccion = direccion;
+        this.contacto = contacto;
+        this.latitud = latitud;
+        this.longitud = longitud;
+        this.nroDocumento = nroDocumento;
+        this.medicion = medicion;
+        this.observacion = observacion;
+        this.fechaRegistro = fechaRegistro;
+        this.horaRegistro = horaRegistro;
+        this.ubigeo = ubigeo;
+        this.estado = estado;
+        this.personalId = personalId;
+        this.nroMedidor = nroMedidor;
+        this.situacion = situacion;
+    }
+
+
+    public TaskModel(String id, String direccion, String horaRegistro, String ubigeo, String estado, String nroMedidor) {
+        this.id = id;
+        this.direccion = direccion;
+        this.horaRegistro = horaRegistro;
+        this.ubigeo = ubigeo;
+        this.estado = estado;
+        this.nroMedidor = nroMedidor;
+    }
+
+    public String getFoto() {
+        return foto;
+    }
+
+    public void setFoto(String foto) {
+        this.foto = foto;
     }
 
     public String getSituacion() {
@@ -127,12 +166,12 @@ public class TaskModel {
         this.medicion = medicion;
     }
 
-    public String getObservacioj() {
-        return observacioj;
+    public String getObservacion() {
+        return observacion;
     }
 
-    public void setObservacioj(String observacioj) {
-        this.observacioj = observacioj;
+    public void setObservacion(String observacion) {
+        this.observacion = observacion;
     }
 
     public String getFechaRegistro() {

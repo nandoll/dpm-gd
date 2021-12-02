@@ -27,10 +27,12 @@ import pe.com.mipredio.utils.Tools;
 
 public class MyFirebaseMessageService extends FirebaseMessagingService {
     private final String TAG = "FIREBASE";
+    private  String _firebase_token;
 
     @Override
     public void onNewToken(String token) {
         super.onNewToken(token);
+        this._firebase_token = token;
         Log.d("====>", "NEW_TOKEN: " + token);
     }
 
@@ -40,6 +42,7 @@ public class MyFirebaseMessageService extends FirebaseMessagingService {
         super.onMessageReceived(remoteMessage);
         Log.i("==========>", "De: " + remoteMessage.getFrom());
         Log.i("==========>", "Mensaje: " + remoteMessage.getNotification().getBody());
+        Log.e("TOKEN_PHONE", this._firebase_token );
 
         if (remoteMessage.getData().size() > 0) {
             Log.i("======>", "Message data payload: " + remoteMessage.getData());

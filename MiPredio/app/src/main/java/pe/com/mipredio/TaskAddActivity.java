@@ -5,14 +5,13 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.SearchView;
+
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import android.Manifest;
 import android.app.ProgressDialog;
-import android.app.SearchManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -27,6 +26,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -39,6 +39,7 @@ import com.squareup.picasso.Picasso;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.util.Date;
 
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -50,6 +51,7 @@ import pe.com.mipredio.response.ErrorUtils;
 import pe.com.mipredio.response.ProgramacionCompletarResponse;
 import pe.com.mipredio.response.ProgramacionDetalleResponse;
 import pe.com.mipredio.response.ProgramacionPhotoUploadResponse;
+import pe.com.mipredio.sqlite.TaskDBHelper;
 import pe.com.mipredio.utils.Consts;
 import pe.com.mipredio.utils.FileUtil;
 import pe.com.mipredio.utils.SharedPreference;
@@ -78,6 +80,10 @@ public class TaskAddActivity extends AppCompatActivity {
 
     private String fecha;
 
+    // SQLite
+    TaskDBHelper taskDBHelper;
+    private String image;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -89,6 +95,9 @@ public class TaskAddActivity extends AppCompatActivity {
 
         id = getIntent().getStringExtra("id"); // ID de la programacion
         fecha = getIntent().getStringExtra("fecha"); // Fecha de la lista
+
+        taskDBHelper = new TaskDBHelper(this);
+
         init();
     }
 
@@ -98,7 +107,13 @@ public class TaskAddActivity extends AppCompatActivity {
         initReferences();
         getInfoTask();
         takeCameraGallery(this);
+
+        if (id == null) {
+            ((LinearLayout) findViewById(R.id.layoutByAnonimous)).setVisibility(View.VISIBLE);
+
+        }
     }
+
     private void initReferences() {
         this.editTextAddress = (TextInputEditText) findViewById(R.id.textAddress);
         this.editTextNames = (TextInputEditText) findViewById(R.id.textNames);
@@ -108,13 +123,15 @@ public class TaskAddActivity extends AppCompatActivity {
         this.editTextCurrentDataCollection = (TextInputEditText) findViewById(R.id.textCurrentDataCollection);
         this.editTextComment = (TextInputEditText) findViewById(R.id.textComment);
 
-        this.editTextAddress.setEnabled(false);
-        this.editTextNames.setEnabled(false);
-        this.editTextLastName.setEnabled(false);
-        this.editTextDocID.setEnabled(false);
-        this.editTextPrevDataCollection.setEnabled(false);
-
+        if (id != null) {
+            this.editTextAddress.setEnabled(false);
+            this.editTextNames.setEnabled(false);
+            this.editTextLastName.setEnabled(false);
+            this.editTextDocID.setEnabled(false);
+            this.editTextPrevDataCollection.setEnabled(false);
+        }
     }
+
     private void initToolbar() {
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -127,10 +144,12 @@ public class TaskAddActivity extends AppCompatActivity {
         Tools.setSystemBarColor(this, R.color.colorPrimary);
         Tools.setSystemBarLight(this);
     }
+
     @Override
     public void invalidateOptionsMenu() {
         super.invalidateOptionsMenu();
     }
+
     @Override
     protected void onResume() {
         super.onResume();
@@ -149,7 +168,6 @@ public class TaskAddActivity extends AppCompatActivity {
 
         MenuItem itemDate = menu.findItem(R.id.action_calendar);
         itemDate.setVisible(false);
-        // return true;
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -166,12 +184,27 @@ public class TaskAddActivity extends AppCompatActivity {
             taskCompleteRequest.setLatitud(latitude);
             taskCompleteRequest.setLongitud(longitude);
             taskCompleteRequest.setMedicion(this.editTextCurrentDataCollection.getText().toString());
+            taskCompleteRequest.setFecha(fecha);
+            taskCompleteRequest.setDireccion(((TextInputEditText) findViewById(R.id.textAddress)).getText().toString());
+
+            taskCompleteRequest.setUbigeo(((TextInputEditText) findViewById(R.id.textUbigeo)).getText().toString());
+            taskCompleteRequest.setNroMedidor(((TextInputEditText) findViewById(R.id.textNroMedidor)).getText().toString());
+
             saveTask(taskCompleteRequest);
         }
         return super.onOptionsItemSelected(item);
     }
 
     private void saveTask(TaskCompleteRequest taskCompleteRequest) {
+
+        if (id != null) {
+            saveWithService(taskCompleteRequest);
+        } else {
+            saveWithSQLite(taskCompleteRequest);
+        }
+    }
+
+    private void saveWithService(TaskCompleteRequest taskCompleteRequest) {
         progressDialog = new ProgressDialog(this);
         Tools.showSaveProgressDialog(progressDialog);
 
@@ -202,6 +235,36 @@ public class TaskAddActivity extends AppCompatActivity {
             }
         });
     }
+
+    private void saveWithSQLite(TaskCompleteRequest taskCompleteRequest) {
+        progressDialog = new ProgressDialog(this);
+        Tools.showSaveProgressDialog(progressDialog);
+
+        long id = taskDBHelper.insertRecordSQLite(
+                taskCompleteRequest.getNroMedidor(),
+                taskCompleteRequest.getUbigeo(),
+                taskCompleteRequest.getContacto(),
+                taskCompleteRequest.getNroDocumento(),
+                taskCompleteRequest.getDireccion(),
+                taskCompleteRequest.getMedicion(),
+                taskCompleteRequest.getComentario(),
+                image,
+                taskCompleteRequest.getFecha(),
+                taskCompleteRequest.getLatitud(),
+                taskCompleteRequest.getLongitud()
+        );
+
+        Tools.dismissProgressDialog(progressDialog);
+        Toast.makeText(TaskAddActivity.this, "La información ha sido guardada en forma local", Toast.LENGTH_LONG).show();
+        Intent intent = new Intent(TaskAddActivity.this, TaskListActivity.class);
+        String dateParts[] = fecha.split("-"); // yyyy-mm-dd
+        intent.putExtra("_year", dateParts[0]);
+        intent.putExtra("_month", dateParts[1]);
+        intent.putExtra("_day", dateParts[2]);
+        startActivity(intent);
+        Log.e("SQLITE_ID", String.valueOf(id));
+    }
+
 
     private void takeCameraGallery(Context context) {
         floatingActionButtonImage.setOnClickListener(new View.OnClickListener() {
@@ -248,17 +311,26 @@ public class TaskAddActivity extends AppCompatActivity {
                     if (resultCode == RESULT_OK && data != null) {
                         Bitmap img = (Bitmap) data.getExtras().get("data");
                         String imgPath = FileUtil.getPath(TaskAddActivity.this, getImageUri(TaskAddActivity.this, img));
-                        Log.e("RUTA_CAMARA", imgPath);
-                        uploadImage(Uri.parse(imgPath));
+                        image = imgPath; // Ruta de la imagen
+                        Log.e("RUTA_CAMARA", image);
+                        if (id != null) {
+                            uploadImage(Uri.parse(imgPath));
+                        } else {
+                            Picasso.get().load(Uri.fromFile(new File(image))).into(imageViewPredio);
+                        }
                     }
                     break;
                 case 1:  // Galeria
                     if (resultCode == RESULT_OK && data != null) {
                         Uri img = data.getData();
                         String imgPath = FileUtil.getPath(TaskAddActivity.this, img);
-
-                        Log.e("RUTA_GALERIA", imgPath);
-                        uploadImage(Uri.parse(imgPath));
+                        image = imgPath;
+                        Log.e("RUTA_GALERIA", image);
+                        if (id != null) {
+                            uploadImage(Uri.parse(imgPath));
+                        } else {
+                            Picasso.get().load(img).into(imageViewPredio);
+                        }
                     }
                     break;
             }
@@ -268,11 +340,11 @@ public class TaskAddActivity extends AppCompatActivity {
     public Uri getImageUri(Context inContext, Bitmap inImage) {
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
         inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
-        String path = MediaStore.Images.Media.insertImage(inContext.getContentResolver(), inImage, "intuenty", null);
-        Log.d("image uri", path);
+        // String path = MediaStore.Images.Media.insertImage(inContext.getContentResolver(), inImage, "intuenty", null);
+        String path = MediaStore.Images.Media.insertImage(inContext.getContentResolver(), inImage, "predio_" + new Date().getTime(), null);
+        Log.e("image uri", path);
         return Uri.parse(path);
     }
-
 
     private void uploadImage(Uri uri) {
         File file = new File(uri.getPath());  // Uri.parse(uri.getPath());
@@ -284,6 +356,7 @@ public class TaskAddActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<ProgramacionPhotoUploadResponse> call, Response<ProgramacionPhotoUploadResponse> response) {
                 if (response.isSuccessful()) {
+                    image = response.body().getFile();
                     Picasso.get().load(ApiClient.API_URL_IMAGE + response.body().getFile()).into(imageViewPredio);
                     Tools.snackBarWithIconSuccess(TaskAddActivity.this, viewMainContent, "La imagen ha sido actualizada.");
                 } else {
@@ -312,9 +385,21 @@ public class TaskAddActivity extends AppCompatActivity {
 
     private boolean isEmptyFields() {
         String msg = "";
+
+        if (id == null) {
+            if (((TextInputEditText) findViewById(R.id.textNroMedidor)).getText().toString().isEmpty()) {
+                ((TextInputEditText) findViewById(R.id.textNroMedidor)).setError("Campo requerido *");
+                msg = "El campo Nro Medidor es requerido." + Consts.BREAK_LINE;
+            }
+            if (((TextInputEditText) findViewById(R.id.textUbigeo)).getText().toString().isEmpty()) {
+                ((TextInputEditText) findViewById(R.id.textUbigeo)).setError("Campo requerido *");
+                msg += "El campo Ubigeo es requerido." + Consts.BREAK_LINE;
+            }
+        }
+
         if (editTextAddress.getText().toString().isEmpty()) {
             editTextAddress.setError("Campo requerido *");
-            msg = "El campo Dirección es requerida." + Consts.BREAK_LINE;
+            msg += "El campo Dirección es requerida." + Consts.BREAK_LINE;
         }
         if (editTextNames.getText().toString().isEmpty()) {
             editTextNames.setError("Campo requerido *");
@@ -343,37 +428,42 @@ public class TaskAddActivity extends AppCompatActivity {
         editTextDocID.setError(null);
         editTextPrevDataCollection.setError(null);
         editTextCurrentDataCollection.setError(null);
+        ((TextInputEditText) findViewById(R.id.textNroMedidor)).setError(null);
+        ((TextInputEditText) findViewById(R.id.textUbigeo)).setError(null);
         return false;
     }
 
     // Obtener información de la actividad
     private void getInfoTask() {
-        String token = SharedPreference.getDefaultsPreference(Consts.TOKEN, this);
-        Call<ProgramacionDetalleResponse> detalle = ApiClient.getProgramacionService().programacionDetalle(token, id);
-        detalle.enqueue(new Callback<ProgramacionDetalleResponse>() {
-            @Override
-            public void onResponse(Call<ProgramacionDetalleResponse> call, Response<ProgramacionDetalleResponse> response) {
-                if (response.isSuccessful()) {
-                    editTextAddress.setText(response.body().getDireccion());
-                    editTextNames.setText(response.body().getNombres());
-                    editTextLastName.setText(response.body().getApellidos());
-                    editTextDocID.setText(response.body().getDni());
-                    editTextPrevDataCollection.setText(response.body().getMedicion_ant());
-                    if (!response.body().getFoto().isEmpty()) {
-                        // imageViewPredio
-                        Picasso.get().load(ApiClient.API_URL_IMAGE + response.body().getFoto()).into(imageViewPredio);
-                    }
-                } else {
-                    ErrorResponse error = ErrorUtils.parseError(response);
-                    Toast.makeText(TaskAddActivity.this, "" + error.getMessages().getError(), Toast.LENGTH_SHORT).show();
-                }
-            }
+        if (id != null) {
+            String token = SharedPreference.getDefaultsPreference(Consts.TOKEN, this);
+            Call<ProgramacionDetalleResponse> detalle = ApiClient.getProgramacionService().programacionDetalle(token, id);
 
-            @Override
-            public void onFailure(Call<ProgramacionDetalleResponse> call, Throwable t) {
-                Toast.makeText(TaskAddActivity.this, "No fue posible obtener la actividad. Intente nuevamente", Toast.LENGTH_LONG).show();
-            }
-        });
+            detalle.enqueue(new Callback<ProgramacionDetalleResponse>() {
+                @Override
+                public void onResponse(Call<ProgramacionDetalleResponse> call, Response<ProgramacionDetalleResponse> response) {
+                    if (response.isSuccessful()) {
+                        editTextAddress.setText(response.body().getDireccion());
+                        editTextNames.setText(response.body().getNombres());
+                        editTextLastName.setText(response.body().getApellidos());
+                        editTextDocID.setText(response.body().getDni());
+                        editTextPrevDataCollection.setText(response.body().getMedicion_ant());
+                        if (!response.body().getFoto().isEmpty()) {
+                            // imageViewPredio
+                            Picasso.get().load(ApiClient.API_URL_IMAGE + response.body().getFoto()).into(imageViewPredio);
+                        }
+                    } else {
+                        ErrorResponse error = ErrorUtils.parseError(response);
+                        Toast.makeText(TaskAddActivity.this, "" + error.getMessages().getError(), Toast.LENGTH_SHORT).show();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<ProgramacionDetalleResponse> call, Throwable t) {
+                    Toast.makeText(TaskAddActivity.this, "No fue posible obtener la actividad. Intente nuevamente", Toast.LENGTH_LONG).show();
+                }
+            });
+        }
     }
 
     @Override

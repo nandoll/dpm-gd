@@ -8,8 +8,62 @@ public class TaskCompleteRequest {
     private String longitud;
     private String medicion;
     private String comentario;
-    // private MultipartBody.Part file; // El archivo a subir
 
+    private String nroMedidor;
+    private String ubigeo;
+    private String contacto;
+    private String nroDocumento;
+    private String direccion;
+    private String fecha;
+
+
+    public String getFecha() {
+        return fecha;
+    }
+
+    public void setFecha(String fecha) {
+        this.fecha = fecha;
+    }
+
+    public String getDireccion() {
+        return direccion;
+    }
+
+    public void setDireccion(String direccion) {
+        this.direccion = direccion;
+    }
+
+    public String getNroDocumento() {
+        return nroDocumento;
+    }
+
+    public void setNroDocumento(String nroDocumento) {
+        this.nroDocumento = nroDocumento;
+    }
+
+    public String getContacto() {
+        return contacto;
+    }
+
+    public void setContacto(String contacto) {
+        this.contacto = contacto;
+    }
+
+    public String getUbigeo() {
+        return ubigeo;
+    }
+
+    public void setUbigeo(String ubigeo) {
+        this.ubigeo = ubigeo;
+    }
+
+    public String getNroMedidor() {
+        return nroMedidor;
+    }
+
+    public void setNroMedidor(String nroMedidor) {
+        this.nroMedidor = nroMedidor;
+    }
 
     public String getLatitud() {
         return latitud;

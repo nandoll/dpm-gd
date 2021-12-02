@@ -108,6 +108,8 @@
                                 android:layout_alignTop="@+id/ubigeoLabel"
                                 android:layout_toEndOf="@+id/ubigeoLabel"
                                 android:text="Lima - Lima - San Borja"
+                                android:maxLines="1"
+                                android:singleLine="true"
                                 android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                                 android:textColor="@color/grey_90" />
 

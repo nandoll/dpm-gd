@@ -109,7 +109,7 @@
                                 android:id="@+id/textUbigeo"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:inputType="number"
+                                android:inputType="text"
                                 android:padding="16dp" />
                         </com.google.android.material.textfield.TextInputLayout>
                     </LinearLayout>
@@ -274,6 +274,7 @@
                                     android:id="@+id/textCurrentDataCollection"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
+                                    android:inputType="number"
                                     android:padding="16dp" />
 
                             </com.google.android.material.textfield.TextInputLayout>

@@ -23,21 +23,33 @@ public class SplashActivity extends AppCompatActivity {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                if (flag == null || expired) {
+
+                if (flag == null) {
                     Intent intentDefault = new Intent(SplashActivity.this, LoginActivity.class);
                     startActivity(intentDefault);
                     finish();
                 } else {
-                    TokenClass tokenClass = new TokenClass(token);
-                    if (tokenClass.getRol().toLowerCase().equals("jefe")) {
-                        Intent intent = new Intent(SplashActivity.this, TechnicalProfessionalListActivity.class);
-                        startActivity(intent);
-                    } else {
+                    if (flag.equals("anonymous")) {
                         Intent intent = new Intent(SplashActivity.this, TaskListActivity.class);
                         startActivity(intent);
+                    } else {
+                        TokenClass tokenClass = new TokenClass(token);
+                        if (expired) {
+                            Intent intentDefault = new Intent(SplashActivity.this, LoginActivity.class);
+                            startActivity(intentDefault);
+                        } else {
+                            if (tokenClass.getRol().toLowerCase().equals("jefe")) {
+                                Intent intent = new Intent(SplashActivity.this, TechnicalProfessionalListActivity.class);
+                                startActivity(intent);
+                            } else {
+                                Intent intent = new Intent(SplashActivity.this, TaskListActivity.class);
+                                startActivity(intent);
+                            }
+                        }
                     }
                     finish();
                 }
+
             }
         }, 1000);
         initToolbar();

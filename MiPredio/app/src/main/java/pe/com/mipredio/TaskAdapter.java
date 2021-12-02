@@ -77,18 +77,21 @@ public class TaskAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             if (p.getEstado().equals(Consts._STATUS_PENDING)) {
                 view.imageViewStatus.setImageResource(Consts._IMG_PENDING);
                 view.imageViewStatus.setColorFilter(ContextCompat.getColor(view.itemView.getContext(), Consts._COLOR_PENDING));
-            } else if (p.getEstado().equals(Consts._STATUS_REGISTER)) {
+            } else if (p.getEstado().equals(Consts._STATUS_COMPLETE)) {
+                view.imageViewStatus.setImageResource(Consts._IMG_COMPLETE);
+                view.imageViewStatus.setColorFilter(ContextCompat.getColor(view.itemView.getContext(), Consts._COLOR_COMPLETE));
+            } else if (p.getEstado().equals(Consts._STATUS_REGISTER)) { // SQLite
                 view.imageViewStatus.setImageResource(Consts._IMG_REGISTER);
                 view.imageViewStatus.setColorFilter(ContextCompat.getColor(view.itemView.getContext(), Consts._COLOR_REGISTER));
             }
 
-            if (p.getSituacion().equals(Consts._STATUS_SEND)) {
-                view.textViewSituacion.setVisibility(View.VISIBLE);
-            }else{
-                view.textViewSituacion.setVisibility(View.GONE);
+            if(p.getSituacion() != null){
+                if (p.getSituacion().equals(Consts._STATUS_SEND)) {
+                    view.textViewSituacion.setVisibility(View.VISIBLE);
+                }else{
+                    view.textViewSituacion.setVisibility(View.GONE);
+                }
             }
-
-
         }
     }
 
