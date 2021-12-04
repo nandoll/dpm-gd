@@ -26,8 +26,11 @@ import android.widget.DatePicker;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -45,6 +48,7 @@ import pe.com.mipredio.response.ErrorResponse;
 import pe.com.mipredio.response.ErrorUtils;
 import pe.com.mipredio.response.ProgramacionCerrarResponse;
 import pe.com.mipredio.response.ProgramacionListaResponse;
+import pe.com.mipredio.services.MyFirebaseMessageService;
 import pe.com.mipredio.sqlite.TaskDBHelper;
 import pe.com.mipredio.utils.Consts;
 import pe.com.mipredio.utils.SharedPreference;
@@ -110,6 +114,8 @@ public class TaskListActivity extends AppCompatActivity implements NavigationVie
                 startActivity(intent);
             }
         });
+
+        MyFirebaseMessageService.messageCloseDay();
     }
 
 
@@ -385,4 +391,6 @@ public class TaskListActivity extends AppCompatActivity implements NavigationVie
         });
         alert.show();
     }
+
+
 }

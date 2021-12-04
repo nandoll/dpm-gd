@@ -133,10 +133,10 @@ class Programaciones extends ResourceController
 
             $data = $programacion->select('programaciones.id, hora, nroMedidor, ubigeo, direccion, programaciones.estado, DATE_FORMAT(fecha,"%d/%m/%Y") fecha, situacion ')
                 ->join('predios', 'programaciones.idPredio=predios.id')
-                ->join('personas','personas.id = programaciones.idPersona')
+                ->join('personas', 'personas.id = programaciones.idPersona')
                 ->where("fecha", $fecha)
                 //->where("idPersona", $tecnico)
-                ->where("correo",$tecnico)
+                ->where("correo", $tecnico)
                 ->orderBy('1', 'desc')
                 ->findAll();
         } else {
@@ -174,10 +174,10 @@ class Programaciones extends ResourceController
 
             $data = $programacion->select(' predios.latitud, predios.longitud ')
                 ->join('predios', 'programaciones.idPredio=predios.id')
-                ->join('personas','personas.id = programaciones.idPersona')
+                ->join('personas', 'personas.id = programaciones.idPersona')
                 ->where("fecha", $fecha)
                 // ->where("idPersona", $tecnico)
-                ->where('correo',$correo)
+                ->where('correo', $correo)
                 ->orderBy('1', 'desc')
                 ->findAll();
         } else {
@@ -267,12 +267,15 @@ class Programaciones extends ResourceController
 
     public function dayClose()
     {
+        $jwt = getHeader($this->request);
+
         $dataJSON = $this->request->getJSON(); // { Fecha }
         if ($dataJSON->fecha) {
             $dataJSON->situacion = STATUS_SEND;
             if ($this->model->where("fecha", $dataJSON->fecha)
                 ->set(["situacion" => STATUS_SEND])->update()
             ) {
+                $this->sendNotification("/topics/cierreDia", array( "title"=>"CIERRE DIARIO", "body" => "El usuario " . $jwt->_username . " ha realizado el cierre del día " . $dataJSON->fecha ));
                 return $this->respondCreated($dataJSON);
             } else {
                 return $this->failValidationErrors($this->model->validation->listErrors());
@@ -282,6 +285,31 @@ class Programaciones extends ResourceController
             return $this->fail("No hay información de envío");
         }
     }
+
+    private function sendNotification($to, $data)
+    {
+        $api_key = "AAAA7JI_gkA:APA91bHENkLUivNg9oW7OABzpmr5cEHKUUYNh5hHAG2nUM6vkZlb0fuVX_IWIwQDStISGa7d44YPwD7HWB0fkXXr4oYPXfOYdjyvJeiLfWt_ohoDCsc8DSqabXAjcs4pMB_RDvoF4pZB";
+        $ch = curl_init();
+        $url = "https://fcm.googleapis.com/fcm/send";
+        $fields = json_encode(array("to" => $to, "notification" => $data));
+
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $fields);
+
+        $headers = array();
+        $headers[] = "Authorization:key=" . $api_key;
+        $headers[] = "Content-Type:application/json";
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+
+        $result = curl_exec($ch);
+        if (curl_errno($ch)) {
+            echo "Error: " . curl_error($ch);
+        }
+        curl_close($ch);
+    }
+
 
 
 
